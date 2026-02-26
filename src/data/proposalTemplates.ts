@@ -388,7 +388,7 @@ export const katsinaTemplate: ProposalData = {
     },
   ],
 
-  grandTotal: { label: "Total", amount: "₦3,200,000", note: "With Publicizing: ₦3,200,000 · Without Publicizing: ₦2,200,000" },
+  grandTotal: { label: "Total", amount: "", note: "With Publicizing: ₦3,200,000 · Without Publicizing: ₦2,200,000" },
 
   timeline: [
     { phase: "Full Project", task: "2–3 Weeks from date of initial payment" },
