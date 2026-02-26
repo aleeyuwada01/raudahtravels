@@ -534,9 +534,13 @@ const PricingTimelinePage = ({ data, sectionStart }: { data: ProposalData; secti
         <div className="p-4 rounded-lg bg-[hsl(var(--primary))]/10 border border-[hsl(var(--primary))]/20">
           <div className="flex justify-between items-center">
             <span className="font-bold text-lg text-[hsl(var(--primary))]">{data.grandTotal.label}</span>
-            <span className="font-bold text-xl text-[hsl(var(--primary))]">{data.grandTotal.amount}</span>
+            {data.grandTotal.amount && (
+              <span className="font-bold text-xl text-[hsl(var(--primary))]">{data.grandTotal.amount}</span>
+            )}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">{data.grandTotal.note}</p>
+          {data.grandTotal.note && (
+            <p className={`mt-1 ${data.grandTotal.amount ? 'text-xs text-muted-foreground' : 'font-bold text-base text-[hsl(var(--primary))]'}`}>{data.grandTotal.note}</p>
+          )}
         </div>
       </div>
     </div>
