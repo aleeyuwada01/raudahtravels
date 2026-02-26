@@ -343,8 +343,90 @@ export const gombeTemplate: ProposalData = {
   ],
 };
 
+// ============================================================================
+// TEMPLATE 3: Katsina State Documentary Quotation
+// ============================================================================
+export const katsinaTemplate: ProposalData = {
+  proposalTitle: "Comprehensive Quotation\nFor Documentary Production",
+  clientName: "Katsina State Government",
+  clientTitle: "Client:",
+  clientLocation: "Katsina State",
+  date: "2026",
+
+  executiveSummary: [
+    "FADAK MEDIA HUB is pleased to present this quotation for the production of a professional documentary on <strong>Government Intervention on Nutrition</strong> in Katsina State.",
+    "The proposed documentary will be a <strong>10–15 minute</strong> high-quality production showcasing the state government's efforts, achievements, and impact in the area of nutrition intervention programs across the state.",
+  ],
+
+  problems: [
+    { title: "Concept Development & Creative Direction", desc: "Developing the core narrative, visual identity, and creative approach for the documentary." },
+    { title: "Professional Scriptwriting", desc: "Structured storytelling with a compelling narrative arc tailored to the nutrition intervention theme." },
+    { title: "Pre-Production Planning & Scheduling", desc: "Location scouting, interview scheduling, equipment preparation, and logistics coordination." },
+    { title: "Field Production", desc: "Multi-location shooting within Katsina State covering intervention sites and beneficiaries." },
+    { title: "Professional Videography & Lighting", desc: "High-definition camera work with professional lighting setups for all scenes." },
+    { title: "Selective Drone Coverage", desc: "Aerial footage where necessary to showcase scale and impact of intervention programs." },
+    { title: "Interviews with Key Officials & Beneficiaries", desc: "On-camera interviews capturing perspectives from government officials and community members." },
+    { title: "Professional Voice-over", desc: "Professional narration in English or Hausa as required." },
+    { title: "Post-Production Editing (HD Quality)", desc: "Complete editing, color grading, and assembly of the final documentary." },
+    { title: "Motion Graphics, Lower Thirds & Subtitles", desc: "Professional graphics, name titles, data visualizations, and subtitle overlays." },
+    { title: "Background Music & Sound Design", desc: "Licensed background music and professional sound mixing/mastering." },
+    { title: "Final Delivery in HD Digital Format", desc: "Delivery of the completed documentary in broadcast-ready HD format." },
+  ],
+
+  featurePages: [],
+
+  pricingTables: [
+    {
+      label: "Cost Breakdown",
+      headers: ["Description", "Cost (NGN)"],
+      rows: [
+        ["Pre-Production (Concept, Scriptwriting, Planning)", "500,000"],
+        ["Production (Filming, Crew, Equipment, Logistics)", "1,200,000"],
+        ["Post-Production (Editing, Graphics, Voice-over, Sound)", "500,000"],
+        ["Publicizing & Media Distribution (TV, Social Media, Online Campaign)", "1,000,000"],
+      ],
+    },
+  ],
+
+  grandTotal: { label: "Total", amount: "₦3,200,000", note: "With Publicizing: ₦3,200,000 · Without Publicizing: ₦2,200,000" },
+
+  timeline: [
+    { phase: "Full Project", task: "2–3 Weeks from date of initial payment" },
+  ],
+
+  appendixSections: [
+    {
+      title: "Payment Terms",
+      body: "70% advance payment upon acceptance of this quotation.\n\n30% upon completion and delivery of the final documentary.",
+    },
+    {
+      title: "Validity of Quotation",
+      body: "This quotation is valid for 30 days from the date of issuance.",
+    },
+  ],
+
+  mouParties: {
+    partyA: "FADAK MEDIA HUB NIGERIA LIMITED (RC: 8426199)",
+    partyB: "Katsina State Government",
+  },
+
+  mouClauses: [
+    { num: 1, title: "Scope of Work", content: "The Provider shall deliver a 10–15 minute professional documentary on Government Intervention on Nutrition in Katsina State, including all pre-production, production, and post-production services as outlined in this quotation." },
+    { num: 2, title: "Payment Terms", content: "The total project cost is ₦3,200,000 (Three Million, Two Hundred Thousand Naira) with publicizing, or ₦2,200,000 (Two Million, Two Hundred Thousand Naira) without publicizing. Payment: 70% advance, 30% upon completion." },
+    { num: 3, title: "Timeline", content: "The Provider commits to delivering the complete documentary within 2–3 weeks from the date of initial payment." },
+    { num: 4, title: "Ownership & Intellectual Property", content: "Full ownership of the documentary and all associated assets shall transfer to the Client upon receipt of full payment. The Provider retains the right to showcase the project in its portfolio." },
+    { num: 5, title: "Confidentiality", content: "Both parties agree to maintain strict confidentiality regarding all proprietary information shared during the engagement." },
+  ],
+
+  mouSignatories: [
+    { party: "For: FADAK MEDIA HUB NIGERIA LIMITED", role: "(The Provider)" },
+    { party: "For: Katsina State Government", role: "(The Client)" },
+  ],
+};
+
 export const templateList = [
   { id: "raudah", name: "Raudah Travels Digital Platform", data: raudahTemplate },
   { id: "gombe", name: "Gombe State Documentary", data: gombeTemplate },
+  { id: "katsina", name: "Katsina Documentary Quotation", data: katsinaTemplate },
   { id: "custom", name: "Custom (AI Generated)", data: null },
 ] as const;

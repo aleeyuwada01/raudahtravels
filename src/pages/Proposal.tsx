@@ -313,21 +313,61 @@ const FeatureBlock = ({ title, items }: { title: string; items: string[] }) => (
   </div>
 );
 
-const CoverPage = ({ data }: { data: ProposalData }) => (
-  <>
-    {/* Page 1: Letterhead + Cover Letter */}
-    <div className="proposal-page bg-white max-w-[210mm] mx-auto shadow-lg print:shadow-none" style={{ padding: "20mm 25mm" }}>
-      <div data-pdf-section>
-        {/* Fixed Letterhead */}
-        <div className="flex flex-col items-center text-center space-y-2">
-          <img src={fadakLogo} alt="Fadak Media Hub" className="h-20 mx-auto object-contain" />
-          <h2 className="text-lg font-semibold tracking-[0.3em] uppercase text-muted-foreground">FADAK MEDIA HUB NIGERIA LIMITED</h2>
-          <p className="text-xs text-muted-foreground font-medium">RC: 8426199</p>
-          <p className="text-sm text-muted-foreground italic">Media · Technology · Strategy</p>
-        </div>
+const Letterhead = () => (
+  <div className="flex flex-col items-center text-center space-y-2">
+    <img src={fadakLogo} alt="Fadak Media Hub" className="h-20 mx-auto object-contain" />
+    <h2 className="text-lg font-semibold tracking-[0.3em] uppercase text-muted-foreground">FADAK MEDIA HUB NIGERIA LIMITED</h2>
+    <p className="text-xs text-muted-foreground font-medium">RC: 8426199</p>
+    <p className="text-sm text-muted-foreground italic">Media · Technology · Strategy</p>
+  </div>
+);
 
-        {/* Optional: Formal Letter Address Block */}
-        {data.coverLetter && (
+const TitleBlock = ({ data }: { data: ProposalData }) => (
+  <div className="flex flex-col items-center text-center justify-center flex-1">
+    <div className="border-t border-b border-[hsl(var(--secondary))] py-8 px-4 space-y-4 w-full">
+      <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Proposal</p>
+      <h1 className="text-3xl md:text-4xl font-bold text-[hsl(var(--primary))]" style={{ fontFamily: "Playfair Display, serif", whiteSpace: "pre-line" }}>
+        {data.proposalTitle}
+      </h1>
+    </div>
+
+    <div className="space-y-2 text-sm text-muted-foreground mt-8">
+      <p className="font-semibold">{data.clientTitle}</p>
+      <p className="text-foreground font-bold text-lg">{data.clientName}</p>
+      <p>{data.clientLocation}</p>
+    </div>
+
+    <div className="mt-8 space-y-2 text-sm text-muted-foreground">
+      <p>{data.date}</p>
+      <p>Confidential</p>
+      {data.demoUrl && (
+        <p className="text-xs">Demo: <a href={`https://${data.demoUrl}`} className="text-[hsl(var(--primary))] underline">{data.demoUrl}</a></p>
+      )}
+    </div>
+  </div>
+);
+
+const CoverPage = ({ data }: { data: ProposalData }) => {
+  // Single-page layout when no cover letter
+  if (!data.coverLetter) {
+    return (
+      <div className="proposal-page bg-white max-w-[210mm] mx-auto shadow-lg print:shadow-none" style={{ padding: "20mm 25mm" }}>
+        <div data-pdf-section className="flex flex-col min-h-[240mm]">
+          <Letterhead />
+          <div className="mt-12" />
+          <TitleBlock data={data} />
+        </div>
+      </div>
+    );
+  }
+
+  // Two-page layout when cover letter exists
+  return (
+    <>
+      {/* Page 1: Letterhead + Cover Letter */}
+      <div className="proposal-page bg-white max-w-[210mm] mx-auto shadow-lg print:shadow-none" style={{ padding: "20mm 25mm" }}>
+        <div data-pdf-section>
+          <Letterhead />
           <div className="mt-8 text-left space-y-3 text-sm leading-relaxed border-t border-border pt-6">
             {data.coverLetter.date && (
               <p className="text-foreground/80">Date: <span className="font-semibold">{data.coverLetter.date}</span></p>
@@ -355,37 +395,18 @@ const CoverPage = ({ data }: { data: ProposalData }) => (
               </div>
             )}
           </div>
-        )}
-      </div>
-    </div>
-
-    {/* Page 2: Proposal Title Block — forced onto a new PDF page */}
-    <div className="proposal-page page-break bg-white max-w-[210mm] mx-auto shadow-lg print:shadow-none" style={{ padding: "20mm 25mm" }}>
-      <div data-pdf-section data-pdf-new-page className="flex flex-col items-center text-center min-h-[200mm] justify-center">
-        <div className="border-t border-b border-[hsl(var(--secondary))] py-8 px-4 space-y-4 w-full">
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Proposal</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-[hsl(var(--primary))]" style={{ fontFamily: "Playfair Display, serif", whiteSpace: "pre-line" }}>
-            {data.proposalTitle}
-          </h1>
-        </div>
-
-        <div className="space-y-2 text-sm text-muted-foreground mt-8">
-          <p className="font-semibold">{data.clientTitle}</p>
-          <p className="text-foreground font-bold text-lg">{data.clientName}</p>
-          <p>{data.clientLocation}</p>
-        </div>
-
-        <div className="mt-8 space-y-2 text-sm text-muted-foreground">
-          <p>{data.date}</p>
-          <p>Confidential</p>
-          {data.demoUrl && (
-            <p className="text-xs">Demo: <a href={`https://${data.demoUrl}`} className="text-[hsl(var(--primary))] underline">{data.demoUrl}</a></p>
-          )}
         </div>
       </div>
-    </div>
-  </>
-);
+
+      {/* Page 2: Proposal Title Block */}
+      <div className="proposal-page page-break bg-white max-w-[210mm] mx-auto shadow-lg print:shadow-none" style={{ padding: "20mm 25mm" }}>
+        <div data-pdf-section data-pdf-new-page className="flex flex-col items-center text-center min-h-[200mm] justify-center">
+          <TitleBlock data={data} />
+        </div>
+      </div>
+    </>
+  );
+};
 
 
 const ExecutiveSummaryPage = ({ data }: { data: ProposalData }) => (
