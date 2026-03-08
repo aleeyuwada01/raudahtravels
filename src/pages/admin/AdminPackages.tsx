@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,32 +10,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Archive, Eye, Trash2 } from "lucide-react";
+import { Plus, Edit, Eye, Trash2 } from "lucide-react";
 import { formatPrice } from "@/data/packages";
 import { toast } from "@/hooks/use-toast";
 import type { Database } from "@/integrations/supabase/types";
+import AdminTablePagination, { usePagination } from "@/components/admin/AdminTablePagination";
 
 type PackageRow = Database["public"]["Tables"]["packages"]["Row"];
 type PackageInsert = Database["public"]["Tables"]["packages"]["Insert"];
 
 const emptyForm: Partial<PackageInsert> = {
-  name: "",
-  type: "umrah",
-  category: "standard",
-  year: 2026,
-  price: 0,
-  currency: "NGN",
-  capacity: 0,
-  available: 0,
-  duration: "",
-  description: "",
-  inclusions: [],
-  airlines: [],
-  departure_cities: [],
-  status: "draft",
-  featured: false,
-  deposit_allowed: false,
-  agent_discount: 0,
+  name: "", type: "umrah", category: "standard", year: 2026, price: 0, currency: "NGN",
+  capacity: 0, available: 0, duration: "", description: "", inclusions: [], airlines: [],
+  departure_cities: [], status: "draft", featured: false, deposit_allowed: false, agent_discount: 0,
 };
 
 const AdminPackages = () => {
@@ -43,18 +30,19 @@ const AdminPackages = () => {
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<PackageInsert>>(emptyForm);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: packages = [], isLoading } = useQuery({
     queryKey: ["admin-packages"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("packages")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.from("packages").select("*").order("created_at", { ascending: false });
       if (error) throw error;
       return data as PackageRow[];
     },
   });
+
+  const { totalPages, paginate } = usePagination(packages, 10);
+  const paginatedItems = paginate(currentPage);
 
   const upsert = useMutation({
     mutationFn: async (pkg: Partial<PackageInsert> & { id?: string }) => {
@@ -68,9 +56,7 @@ const AdminPackages = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-packages"] });
-      setOpen(false);
-      setEditingId(null);
-      setForm(emptyForm);
+      setOpen(false); setEditingId(null); setForm(emptyForm);
       toast({ title: editingId ? "Package updated" : "Package created" });
     },
     onError: (err: Error) => toast({ title: "Error", description: err.message, variant: "destructive" }),
@@ -81,46 +67,18 @@ const AdminPackages = () => {
       const { error } = await supabase.from("packages").update({ status: "archived" as const }).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-packages"] });
-      toast({ title: "Package archived" });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-packages"] }); toast({ title: "Package archived" }); },
   });
 
   const openEdit = (pkg: PackageRow) => {
     setEditingId(pkg.id);
-    setForm({
-      name: pkg.name,
-      type: pkg.type,
-      category: pkg.category,
-      year: pkg.year,
-      price: pkg.price,
-      currency: pkg.currency,
-      capacity: pkg.capacity,
-      available: pkg.available,
-      duration: pkg.duration || "",
-      description: pkg.description || "",
-      inclusions: pkg.inclusions || [],
-      airlines: pkg.airlines || [],
-      departure_cities: pkg.departure_cities || [],
-      status: pkg.status,
-      featured: pkg.featured,
-      deposit_allowed: pkg.deposit_allowed,
-      minimum_deposit: pkg.minimum_deposit,
-      agent_discount: pkg.agent_discount,
-    });
+    setForm({ name: pkg.name, type: pkg.type, category: pkg.category, year: pkg.year, price: pkg.price, currency: pkg.currency, capacity: pkg.capacity, available: pkg.available, duration: pkg.duration || "", description: pkg.description || "", inclusions: pkg.inclusions || [], airlines: pkg.airlines || [], departure_cities: pkg.departure_cities || [], status: pkg.status, featured: pkg.featured, deposit_allowed: pkg.deposit_allowed, minimum_deposit: pkg.minimum_deposit, agent_discount: pkg.agent_discount });
     setOpen(true);
   };
 
   const handleSave = () => {
     const payload = editingId ? { ...form, id: editingId } : form;
     upsert.mutate(payload as any);
-  };
-
-  const statusColors: Record<string, string> = {
-    active: "bg-primary/10 text-primary",
-    draft: "bg-secondary/10 text-secondary",
-    archived: "bg-muted text-muted-foreground",
   };
 
   return (
@@ -132,134 +90,47 @@ const AdminPackages = () => {
         </div>
         <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) { setEditingId(null); setForm(emptyForm); } }}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-5 w-5 mr-2" />
-              New Package
-            </Button>
+            <Button><Plus className="h-5 w-5 mr-2" />New Package</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editingId ? "Edit Package" : "Create Package"}</DialogTitle>
-            </DialogHeader>
+            <DialogHeader><DialogTitle>{editingId ? "Edit Package" : "Create Package"}</DialogTitle></DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Name</Label>
-                  <Input value={form.name || ""} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Year</Label>
-                  <Input type="number" value={form.year || 2026} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} />
-                </div>
+                <div className="space-y-2"><Label>Name</Label><Input value={form.name || ""} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+                <div className="space-y-2"><Label>Year</Label><Input type="number" value={form.year || 2026} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} /></div>
               </div>
               <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>Type</Label>
-                  <Select value={form.type || "umrah"} onValueChange={(v) => setForm({ ...form, type: v as any })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="hajj">Hajj</SelectItem>
-                      <SelectItem value="umrah">Umrah</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Category</Label>
-                  <Select value={form.category || "standard"} onValueChange={(v) => setForm({ ...form, category: v as any })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="premium">Premium</SelectItem>
-                      <SelectItem value="standard">Standard</SelectItem>
-                      <SelectItem value="budget">Budget</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Status</Label>
-                  <Select value={form.status || "draft"} onValueChange={(v) => setForm({ ...form, status: v as any })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="archived">Archived</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <div className="space-y-2"><Label>Type</Label><Select value={form.type || "umrah"} onValueChange={(v) => setForm({ ...form, type: v as any })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="hajj">Hajj</SelectItem><SelectItem value="umrah">Umrah</SelectItem></SelectContent></Select></div>
+                <div className="space-y-2"><Label>Category</Label><Select value={form.category || "standard"} onValueChange={(v) => setForm({ ...form, category: v as any })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="premium">Premium</SelectItem><SelectItem value="standard">Standard</SelectItem><SelectItem value="budget">Budget</SelectItem></SelectContent></Select></div>
+                <div className="space-y-2"><Label>Status</Label><Select value={form.status || "draft"} onValueChange={(v) => setForm({ ...form, status: v as any })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="active">Active</SelectItem><SelectItem value="draft">Draft</SelectItem><SelectItem value="archived">Archived</SelectItem></SelectContent></Select></div>
               </div>
               <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>Price (NGN)</Label>
-                  <Input type="number" value={form.price || 0} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Capacity</Label>
-                  <Input type="number" value={form.capacity || 0} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Available</Label>
-                  <Input type="number" value={form.available || 0} onChange={(e) => setForm({ ...form, available: Number(e.target.value) })} />
-                </div>
+                <div className="space-y-2"><Label>Price (NGN)</Label><Input type="number" value={form.price || 0} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} /></div>
+                <div className="space-y-2"><Label>Capacity</Label><Input type="number" value={form.capacity || 0} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} /></div>
+                <div className="space-y-2"><Label>Available</Label><Input type="number" value={form.available || 0} onChange={(e) => setForm({ ...form, available: Number(e.target.value) })} /></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Duration</Label>
-                  <Input value={form.duration || ""} onChange={(e) => setForm({ ...form, duration: e.target.value })} placeholder="e.g. 14 days" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Season</Label>
-                  <Input value={(form as any).season || ""} onChange={(e) => setForm({ ...form, season: e.target.value } as any)} placeholder="e.g. ramadan" />
-                </div>
+                <div className="space-y-2"><Label>Duration</Label><Input value={form.duration || ""} onChange={(e) => setForm({ ...form, duration: e.target.value })} placeholder="e.g. 14 days" /></div>
+                <div className="space-y-2"><Label>Season</Label><Input value={(form as any).season || ""} onChange={(e) => setForm({ ...form, season: e.target.value } as any)} placeholder="e.g. ramadan" /></div>
               </div>
-              <div className="space-y-2">
-                <Label>Description</Label>
-                <Textarea value={form.description || ""} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
-              </div>
-              <div className="space-y-2">
-                <Label>Inclusions (comma-separated)</Label>
-                <Textarea
-                  value={(form.inclusions || []).join(", ")}
-                  onChange={(e) => setForm({ ...form, inclusions: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
-                  rows={2}
-                />
+              <div className="space-y-2"><Label>Description</Label><Textarea value={form.description || ""} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} /></div>
+              <div className="space-y-2"><Label>Inclusions (comma-separated)</Label><Textarea value={(form.inclusions || []).join(", ")} onChange={(e) => setForm({ ...form, inclusions: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} rows={2} /></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2"><Label>Airlines (comma-separated)</Label><Input value={(form.airlines || []).join(", ")} onChange={(e) => setForm({ ...form, airlines: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} /></div>
+                <div className="space-y-2"><Label>Departure Cities (comma-separated)</Label><Input value={(form.departure_cities || []).join(", ")} onChange={(e) => setForm({ ...form, departure_cities: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} /></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Airlines (comma-separated)</Label>
-                  <Input
-                    value={(form.airlines || []).join(", ")}
-                    onChange={(e) => setForm({ ...form, airlines: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Departure Cities (comma-separated)</Label>
-                  <Input
-                    value={(form.departure_cities || []).join(", ")}
-                    onChange={(e) => setForm({ ...form, departure_cities: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
-                  />
-                </div>
+                <div className="space-y-2"><Label>Agent Discount (NGN)</Label><Input type="number" value={form.agent_discount || 0} onChange={(e) => setForm({ ...form, agent_discount: Number(e.target.value) })} /></div>
+                <div className="space-y-2"><Label>Minimum Deposit (NGN)</Label><Input type="number" value={form.minimum_deposit || 0} onChange={(e) => setForm({ ...form, minimum_deposit: Number(e.target.value) })} /></div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Agent Discount (NGN)</Label>
-                  <Input type="number" value={form.agent_discount || 0} onChange={(e) => setForm({ ...form, agent_discount: Number(e.target.value) })} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Minimum Deposit (NGN)</Label>
-                  <Input type="number" value={form.minimum_deposit || 0} onChange={(e) => setForm({ ...form, minimum_deposit: Number(e.target.value) })} />
-                </div>
-              </div>
-              <Button onClick={handleSave} disabled={upsert.isPending}>
-                {upsert.isPending ? "Saving..." : editingId ? "Update Package" : "Create Package"}
-              </Button>
+              <Button onClick={handleSave} disabled={upsert.isPending}>{upsert.isPending ? "Saving..." : editingId ? "Update Package" : "Create Package"}</Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
       {isLoading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => <div key={i} className="h-16 bg-muted/50 rounded-lg animate-pulse" />)}
-        </div>
+        <div className="space-y-3">{[1, 2, 3].map((i) => <div key={i} className="h-16 bg-muted/50 rounded-lg animate-pulse" />)}</div>
       ) : (
         <Card className="border-border">
           <CardContent className="p-0">
@@ -277,45 +148,43 @@ const AdminPackages = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {packages.map((pkg, index) => (
-                  <TableRow key={pkg.id}>
-                    <TableCell className="text-muted-foreground font-medium">{String(index + 1).padStart(2, '0')}</TableCell>
-                    <TableCell className="font-medium">{pkg.name}</TableCell>
-                    <TableCell><Badge variant="outline" className="capitalize">{pkg.type}</Badge></TableCell>
-                    <TableCell className="capitalize">{pkg.category}</TableCell>
-                    <TableCell className="font-medium">{formatPrice(pkg.price)}</TableCell>
-                    <TableCell>{pkg.available}/{pkg.capacity}</TableCell>
-                    <TableCell>
-                      <Badge variant={pkg.status === "active" ? "default" : pkg.status === "archived" ? "secondary" : "outline"} className="capitalize">
-                        {pkg.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-center gap-1">
-                        <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:text-primary hover:bg-primary/10" onClick={() => openEdit(pkg)}>
-                          <Eye className="h-[18px] w-[18px]" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10" onClick={() => openEdit(pkg)}>
-                          <Edit className="h-[18px] w-[18px]" />
-                        </Button>
-                        {pkg.status !== "archived" && (
-                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => archiveMutation.mutate(pkg.id)}>
-                            <Trash2 className="h-[18px] w-[18px]" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {paginatedItems.map((pkg, index) => {
+                  const sl = (currentPage - 1) * 10 + index + 1;
+                  return (
+                    <TableRow key={pkg.id}>
+                      <TableCell className="text-muted-foreground font-medium">{String(sl).padStart(2, '0')}</TableCell>
+                      <TableCell className="font-medium">{pkg.name}</TableCell>
+                      <TableCell><Badge variant="outline" className="capitalize">{pkg.type}</Badge></TableCell>
+                      <TableCell className="capitalize">{pkg.category}</TableCell>
+                      <TableCell className="font-medium">{formatPrice(pkg.price)}</TableCell>
+                      <TableCell>{pkg.available}/{pkg.capacity}</TableCell>
+                      <TableCell>
+                        <Badge variant={pkg.status === "active" ? "default" : pkg.status === "archived" ? "secondary" : "outline"} className="capitalize">{pkg.status}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-center gap-2">
+                          <button className="h-8 w-8 rounded-lg bg-muted/80 text-muted-foreground flex items-center justify-center hover:bg-muted transition-colors" onClick={() => openEdit(pkg)} title="View">
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button className="h-8 w-8 rounded-lg bg-primary/15 text-primary flex items-center justify-center hover:bg-primary/20 transition-colors" onClick={() => openEdit(pkg)} title="Edit">
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          {pkg.status !== "archived" && (
+                            <button className="h-8 w-8 rounded-lg bg-destructive/15 text-destructive flex items-center justify-center hover:bg-destructive/20 transition-colors" onClick={() => archiveMutation.mutate(pkg.id)} title="Archive">
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
                 {packages.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
-                      <p className="text-base">No packages found</p>
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={8} className="text-center py-10 text-muted-foreground"><p className="text-base">No packages found</p></TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
+            <AdminTablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
           </CardContent>
         </Card>
       )}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,11 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Users, Eye, Printer, Edit, Trash2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useRef } from "react";
+import AdminTablePagination, { usePagination } from "@/components/admin/AdminTablePagination";
 
 const AdminPilgrims = () => {
   const [search, setSearch] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const printRef = useRef<HTMLDivElement>(null);
 
   const { data: bookings = [], isLoading } = useQuery({
@@ -32,12 +35,8 @@ const AdminPilgrims = () => {
     (b.passport_number || "").toLowerCase().includes(search.toLowerCase())
   );
 
-  const statusColors: Record<string, string> = {
-    pending: "bg-secondary/10 text-secondary",
-    confirmed: "bg-primary/10 text-primary",
-    cancelled: "bg-destructive/10 text-destructive",
-    completed: "bg-muted text-muted-foreground",
-  };
+  const { totalPages, paginate } = usePagination(filtered, 10);
+  const paginatedItems = paginate(currentPage);
 
   const handlePrint = () => {
     if (!printRef.current) return;
@@ -57,10 +56,6 @@ const AdminPilgrims = () => {
         .section { margin-top: 24px; padding-top: 16px; border-top: 1px solid #eee; }
         .section-title { font-size: 15px; font-weight: 600; color: #166534; margin-bottom: 12px; }
         .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
-        .badge-pending { background: #fef3c7; color: #92400e; }
-        .badge-confirmed { background: #d1fae5; color: #065f46; }
-        .badge-cancelled { background: #fee2e2; color: #991b1b; }
-        .badge-completed { background: #e5e7eb; color: #374151; }
         @media print { body { padding: 20px; } }
       </style></head><body>
       ${printRef.current.innerHTML}
@@ -88,7 +83,7 @@ const AdminPilgrims = () => {
           placeholder="Search by name, ref, passport..."
           className="max-w-xs h-11 text-base"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
         />
       </div>
 
@@ -115,11 +110,12 @@ const AdminPilgrims = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((b, index) => {
+                {paginatedItems.map((b, index) => {
                   const pkg = (b as any).packages;
+                  const sl = (currentPage - 1) * 10 + index + 1;
                   return (
                     <TableRow key={b.id}>
-                      <TableCell className="text-muted-foreground font-medium">{String(index + 1).padStart(2, '0')}</TableCell>
+                      <TableCell className="text-muted-foreground font-medium">{String(sl).padStart(2, '0')}</TableCell>
                       <TableCell className="font-medium">{b.full_name}</TableCell>
                       <TableCell className="font-mono text-muted-foreground">{b.reference || b.id.slice(0, 8)}</TableCell>
                       <TableCell>
@@ -138,16 +134,16 @@ const AdminPilgrims = () => {
                       </TableCell>
                       <TableCell className="text-muted-foreground">{new Date(b.created_at).toLocaleDateString()}</TableCell>
                       <TableCell>
-                        <div className="flex items-center justify-center gap-1">
-                          <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:text-primary hover:bg-primary/10" onClick={() => setSelectedBooking(b)}>
-                            <Eye className="h-[18px] w-[18px]" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10">
-                            <Edit className="h-[18px] w-[18px]" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
-                            <Trash2 className="h-[18px] w-[18px]" />
-                          </Button>
+                        <div className="flex items-center justify-center gap-2">
+                          <button className="h-8 w-8 rounded-lg bg-muted/80 text-muted-foreground flex items-center justify-center hover:bg-muted transition-colors" onClick={() => setSelectedBooking(b)} title="View">
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button className="h-8 w-8 rounded-lg bg-primary/15 text-primary flex items-center justify-center hover:bg-primary/20 transition-colors" title="Edit">
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button className="h-8 w-8 rounded-lg bg-destructive/15 text-destructive flex items-center justify-center hover:bg-destructive/20 transition-colors" title="Delete">
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -163,6 +159,7 @@ const AdminPilgrims = () => {
                 )}
               </TableBody>
             </Table>
+            <AdminTablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
           </CardContent>
         </Card>
       )}
@@ -187,9 +184,8 @@ const AdminPilgrims = () => {
               </div>
 
               <div className="space-y-6">
-                {/* Personal Info */}
                 <div>
-                  <h3 className="section-title text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Personal Information</h3>
+                  <h3 className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Personal Information</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <DetailField label="Full Name" value={selectedBooking.full_name} />
                     <DetailField label="Gender" value={selectedBooking.gender} />
@@ -200,7 +196,6 @@ const AdminPilgrims = () => {
                   </div>
                 </div>
 
-                {/* Booking Info */}
                 <div className="border-t border-border pt-4">
                   <h3 className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Booking Details</h3>
                   <div className="grid grid-cols-2 gap-4">
@@ -213,7 +208,6 @@ const AdminPilgrims = () => {
                   </div>
                 </div>
 
-                {/* Emergency Contact */}
                 <div className="border-t border-border pt-4">
                   <h3 className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Emergency Contact</h3>
                   <div className="grid grid-cols-2 gap-4">
@@ -223,7 +217,6 @@ const AdminPilgrims = () => {
                   </div>
                 </div>
 
-                {/* Special Requests */}
                 {selectedBooking.special_requests && (
                   <div className="border-t border-border pt-4">
                     <h3 className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Special Requests</h3>
