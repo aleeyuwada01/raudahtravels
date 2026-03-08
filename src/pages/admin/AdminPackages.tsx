@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Archive, Eye } from "lucide-react";
+import { Plus, Edit, Archive, Eye, Trash2 } from "lucide-react";
 import { formatPrice } from "@/data/packages";
 import { toast } from "@/hooks/use-toast";
 import type { Database } from "@/integrations/supabase/types";
@@ -266,31 +266,42 @@ const AdminPackages = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>SL</TableHead>
                   <TableHead>Package</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Capacity</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {packages.map((pkg) => (
+                {packages.map((pkg, index) => (
                   <TableRow key={pkg.id}>
+                    <TableCell className="text-muted-foreground font-medium">{String(index + 1).padStart(2, '0')}</TableCell>
                     <TableCell className="font-medium">{pkg.name}</TableCell>
                     <TableCell><Badge variant="outline" className="capitalize">{pkg.type}</Badge></TableCell>
                     <TableCell className="capitalize">{pkg.category}</TableCell>
-                    <TableCell>{formatPrice(pkg.price)}</TableCell>
+                    <TableCell className="font-medium">{formatPrice(pkg.price)}</TableCell>
                     <TableCell>{pkg.available}/{pkg.capacity}</TableCell>
                     <TableCell>
-                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[pkg.status] || ""}`}>{pkg.status}</span>
+                      <Badge variant={pkg.status === "active" ? "default" : pkg.status === "archived" ? "secondary" : "outline"} className="capitalize">
+                        {pkg.status}
+                      </Badge>
                     </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(pkg)}><Edit className="h-4 w-4" /></Button>
+                    <TableCell>
+                      <div className="flex items-center justify-center gap-1">
+                        <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:text-primary hover:bg-primary/10" onClick={() => openEdit(pkg)}>
+                          <Eye className="h-[18px] w-[18px]" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10" onClick={() => openEdit(pkg)}>
+                          <Edit className="h-[18px] w-[18px]" />
+                        </Button>
                         {pkg.status !== "archived" && (
-                          <Button variant="ghost" size="icon" onClick={() => archiveMutation.mutate(pkg.id)}><Archive className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => archiveMutation.mutate(pkg.id)}>
+                            <Trash2 className="h-[18px] w-[18px]" />
+                          </Button>
                         )}
                       </div>
                     </TableCell>
@@ -298,7 +309,9 @@ const AdminPackages = () => {
                 ))}
                 {packages.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No packages found</TableCell>
+                    <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
+                      <p className="text-base">No packages found</p>
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>

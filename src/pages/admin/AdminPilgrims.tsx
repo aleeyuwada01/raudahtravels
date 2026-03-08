@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Users, Eye, Printer } from "lucide-react";
+import { Users, Eye, Printer, Edit, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
 
 const AdminPilgrims = () => {
@@ -79,14 +79,14 @@ const AdminPilgrims = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Pilgrim Management</h1>
-          <p className="text-sm text-muted-foreground mt-1">{bookings.length} total bookings</p>
+          <h1 className="font-body text-3xl font-bold text-foreground">Pilgrim Management</h1>
+          <p className="text-base text-muted-foreground mt-1">{bookings.length} total bookings</p>
         </div>
         <Input
           placeholder="Search by name, ref, passport..."
-          className="max-w-xs"
+          className="max-w-xs h-11 text-base"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -102,6 +102,7 @@ const AdminPilgrims = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>SL</TableHead>
                   <TableHead>Pilgrim</TableHead>
                   <TableHead>Reference</TableHead>
                   <TableHead>Package</TableHead>
@@ -110,42 +111,53 @@ const AdminPilgrims = () => {
                   <TableHead>Departure</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((b) => {
+                {filtered.map((b, index) => {
                   const pkg = (b as any).packages;
                   return (
                     <TableRow key={b.id}>
+                      <TableCell className="text-muted-foreground font-medium">{String(index + 1).padStart(2, '0')}</TableCell>
                       <TableCell className="font-medium">{b.full_name}</TableCell>
-                      <TableCell className="text-xs font-mono">{b.reference || b.id.slice(0, 8)}</TableCell>
+                      <TableCell className="font-mono text-muted-foreground">{b.reference || b.id.slice(0, 8)}</TableCell>
                       <TableCell>
                         <div>
-                          <p className="text-sm">{pkg?.name || "—"}</p>
+                          <p>{pkg?.name || "—"}</p>
                           <Badge variant="outline" className="capitalize text-xs mt-0.5">{pkg?.type || "—"}</Badge>
                         </div>
                       </TableCell>
-                      <TableCell className="text-xs">{b.passport_number || "—"}</TableCell>
+                      <TableCell className="text-muted-foreground">{b.passport_number || "—"}</TableCell>
                       <TableCell className="capitalize">{b.gender || "—"}</TableCell>
                       <TableCell>{b.departure_city || "—"}</TableCell>
                       <TableCell>
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[b.status]}`}>{b.status}</span>
+                        <Badge variant={b.status === "confirmed" ? "default" : b.status === "cancelled" ? "destructive" : "secondary"} className="capitalize">
+                          {b.status}
+                        </Badge>
                       </TableCell>
-                      <TableCell className="text-xs">{new Date(b.created_at).toLocaleDateString()}</TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" onClick={() => setSelectedBooking(b)}>
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                      <TableCell className="text-muted-foreground">{new Date(b.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-center gap-1">
+                          <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:text-primary hover:bg-primary/10" onClick={() => setSelectedBooking(b)}>
+                            <Eye className="h-[18px] w-[18px]" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10">
+                            <Edit className="h-[18px] w-[18px]" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+                            <Trash2 className="h-[18px] w-[18px]" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
                 })}
                 {filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                      <Users className="h-8 w-8 mx-auto mb-2 opacity-30" />
-                      No pilgrims found
+                    <TableCell colSpan={10} className="text-center py-10 text-muted-foreground">
+                      <Users className="h-10 w-10 mx-auto mb-3 opacity-30" />
+                      <p className="text-base">No pilgrims found</p>
                     </TableCell>
                   </TableRow>
                 )}
