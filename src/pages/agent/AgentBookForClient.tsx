@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle, Percent } from "lucide-react";
+import { ArrowLeft, CheckCircle, Percent, Wallet, AlertTriangle } from "lucide-react";
 
 const AgentBookForClient = () => {
   const { id: packageId } = useParams<{ id: string }>();
