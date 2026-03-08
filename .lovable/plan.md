@@ -1,73 +1,52 @@
 
 
-# Admin Sidebar Redesign — Clean Light Theme with Collapsible Dropdowns
-
-## Design Direction (from reference images)
-- **Light/white background** sidebar instead of current dark emerald
-- Clean, minimal aesthetic with subtle gray tones
-- **Collapsible dropdown groups** with chevron arrows (like "Product > Overview, Drafts, Released")
-- Top-level items (Dashboard, standalone pages) are flat links
-- Multi-child groups (Documents, Agents, Operations, System) become collapsible accordions with sub-items indented
-- Active item gets a subtle highlight pill
-- Rounded logo at top, clean user footer
-
-## Structure
-
-```text
-┌─────────────────────┐
-│  🔲 Raudah Admin    │  ← Logo + brand
-├─────────────────────┤
-│  ⊞ Dashboard        │  ← flat link (Overview)
-│  📦 Packages        │  ← flat link
-│  💳 Payments        │  ← flat link
-│  👥 Pilgrims        │  ← flat link
-│  📊 Analytics       │  ← flat link
-│  🏷 ID Tags         │  ← flat link
-│                     │
-│  📄 Documents    ▾  │  ← collapsible
-│     Visa Mgmt       │
-│     Flight Tickets   │
-│                     │
-│  👤 Agents       ▾  │  ← collapsible
-│     Agents List      │
-│     Applications     │
-│     Agent Wallets    │
-│                     │
-│  ⚙ Operations   ▾  │  ← collapsible
-│     Bank Accounts    │
-│     Activity Log     │
-│     Amendments       │
-│     Support Tickets  │
-│                     │
-│  🛡 System       ▾  │  ← collapsible
-│     Staff Mgmt       │
-│     Team Chat        │
-│     Booking Form     │
-│     AI Assistant     │
-│     Settings         │
-├─────────────────────┤
-│  [Avatar] Admin Name │
-│  Sign Out            │
-└─────────────────────┘
-```
+# Add Katsina Quotation Template + Fix First-Page Whitespace
 
 ## Changes
 
-### 1. New CSS variables for admin sidebar
-Add admin-specific sidebar overrides in `index.css` — light background (`#fafafa`), dark text, subtle borders, soft active state.
+### 1. Add Katsina Documentary Template (`src/data/proposalTemplates.ts`)
 
-### 2. Rewrite `AdminSidebar.tsx`
-- Use `Collapsible` + `CollapsibleTrigger` + `CollapsibleContent` from radix for dropdown groups
-- Top-level items (Dashboard section) rendered as flat `NavLink` items
-- Groups with children get a clickable header with `ChevronDown` icon that rotates on open
-- Active sub-item auto-opens its parent group via `useLocation`
-- Clean white/light gray theme with emerald accent for active items
-- Subtle left border indicator on active items (like the reference)
+Add a new `katsinaTemplate: ProposalData` export with:
+- **proposalTitle**: "Comprehensive Quotation\nFor Documentary Production"
+- **clientName**: "Katsina State Government"
+- **clientTitle**: "Client:"
+- **clientLocation**: "Katsina State"
+- **date**: "2026"
+- **No coverLetter** (simple quotation format)
+- **executiveSummary**: Project description — Documentary on Government Intervention on Nutrition, 10–15 minutes
+- **problems**: Scope of Work items (concept development, scriptwriting, pre-production, field production, videography, drone, interviews, voice-over, post-production, motion graphics, music, final delivery)
+- **featurePages**: Empty array (no feature pages needed for this simple quotation)
+- **pricingTables**: Single table with the 4 cost rows:
+  - Pre-Production: ₦500,000
+  - Production: ₦1,200,000
+  - Post-Production: ₦500,000
+  - Publicizing & Media Distribution: ₦1,000,000
+- **grandTotal**: Two options shown — ₦3,200,000 (with publicizing) / ₦2,200,000 (without)
+- **timeline**: Single entry — "2–3 Weeks from date of initial payment"
+- **Payment terms** in appendixSections: "70% advance, 30% upon completion"
+- **Validity**: "30 Days from date of issuance"
+- **mouParties/mouClauses/mouSignatories**: Standard FADAK terms adapted for Katsina
 
-### 3. Update `AdminLayout.tsx`
-- Pass sidebar-specific className overrides for the light theme
+Add to `templateList` array before "custom":
+```ts
+{ id: "katsina", name: "Katsina Documentary Quotation", data: katsinaTemplate },
+```
 
-**Files to edit:**
-- `src/components/admin/AdminSidebar.tsx` — full rewrite with collapsible groups
-- `src/index.css` — add `.admin-sidebar` override styles
+### 2. Fix First-Page Whitespace in PDF (`src/pages/Proposal.tsx`)
+
+**Root cause**: The `CoverPage` component renders two separate `.proposal-page` divs — one for letterhead/cover letter and one for the title block (forced to page 2 via `data-pdf-new-page`). For templates without a cover letter (like Raudah and the new Katsina template), this creates an empty/sparse first page.
+
+**Fix**: Restructure `CoverPage` to render as a **single page** when there is no `coverLetter`. The title block content should appear on page 1, directly after the letterhead.
+
+- **When `data.coverLetter` exists**: Keep the current two-page layout (letterhead + letter on page 1, title on page 2)
+- **When no `coverLetter`**: Render everything in a single `.proposal-page` div with one `data-pdf-section` — letterhead at top, then title block, client info, and date — no `data-pdf-new-page` attribute
+
+This ensures content starts on page 1 for simple quotation templates.
+
+### Files to Modify
+
+| File | Change |
+|------|--------|
+| `src/data/proposalTemplates.ts` | Add `katsinaTemplate` export and add to `templateList` |
+| `src/pages/Proposal.tsx` | Restructure `CoverPage` to conditionally render single-page or two-page layout based on presence of `coverLetter` |
 
