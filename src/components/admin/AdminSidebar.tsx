@@ -114,17 +114,17 @@ const CollapsibleGroup = ({
       <CollapsibleContent>
         <div className="relative ml-[26px] mt-0.5 mb-1">
           {/* Vertical connector line */}
-          <div className="absolute left-0 top-0 bottom-3 w-px bg-primary/30" />
+          <div className="absolute left-0 top-0 bottom-3 w-px bg-[hsl(0,0%,78%)]" />
           <div className="space-y-0.5">
             {visibleItems.map((item, idx) => (
               <div key={item.url} className="relative flex items-center">
                 {/* Horizontal connector branch */}
-                <div className="absolute left-0 top-1/2 w-4 h-px bg-primary/30" />
+                <div className="absolute left-0 top-1/2 w-4 h-px bg-[hsl(0,0%,78%)]" />
                 <NavLink
                   to={item.url}
                   end={false}
                   className="flex items-center w-full ml-6 px-3 py-2.5 rounded-lg text-[16px] text-[hsl(0,0%,45%)] hover:bg-[hsl(0,0%,90%)] hover:text-[hsl(0,0%,15%)] transition-colors"
-                  activeClassName="bg-primary/10 text-primary font-semibold"
+                  activeClassName="bg-primary text-primary-foreground font-semibold"
                 >
                   <span>{item.title}</span>
                 </NavLink>
@@ -169,7 +169,7 @@ const AdminSidebar = () => {
                 to={item.url}
                 end={item.url === "/admin"}
                 className="flex items-center gap-4 px-3 py-3 rounded-xl text-[17px] text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,90%)] transition-colors"
-                activeClassName="bg-primary/10 text-primary font-semibold"
+                activeClassName="bg-primary text-primary-foreground font-semibold"
               >
                 <item.icon className="h-[22px] w-[22px] shrink-0 text-[hsl(0,0%,45%)]" />
                 <span>{item.title}</span>
