@@ -121,6 +121,17 @@ const App = () => (
                   <Route path="id-tags" element={<AdminIdTags />} />
                   <Route path="agent-applications" element={<AdminAgentApplications />} />
                   <Route path="ai-assistant" element={<AdminAiAssistant />} />
+                  <Route path="visa-management" element={<AdminVisaManagement />} />
+                  <Route path="flight-tickets" element={<AdminFlightTickets />} />
+                  <Route path="agents" element={<AdminAgents />} />
+                  <Route path="bank-accounts" element={<AdminBankAccounts />} />
+                  <Route path="activity-log" element={<AdminActivityLog />} />
+                  <Route path="amendments" element={<AdminAmendments />} />
+                  <Route path="support-tickets" element={<AdminSupportTickets />} />
+                  <Route path="staff-management" element={<AdminStaffManagement />} />
+                  <Route path="team-chat" element={<AdminTeamChat />} />
+                  <Route path="booking-form" element={<AdminBookingForm />} />
+                  <Route path="settings" element={<AdminSettings />} />
                 </Route>
                 <Route
                   path="/agent"
