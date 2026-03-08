@@ -6,6 +6,7 @@ import {
   Package,
   CreditCard,
   PiggyBank,
+  FileCheck,
   LogOut,
 } from "lucide-react";
 import {
@@ -27,6 +28,7 @@ const menuItems = [
   { title: "Clients", url: "/agent/clients", icon: Users },
   { title: "Packages", url: "/agent/packages", icon: Package },
   { title: "Bookings", url: "/agent/bookings", icon: CreditCard },
+  { title: "Visa & Tickets", url: "/agent/visa-tickets", icon: FileCheck },
   { title: "Commissions", url: "/agent/commissions", icon: PiggyBank },
 ];
 

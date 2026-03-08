@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { formatPrice } from "@/data/packages";
+import VisaTicketStatus from "@/components/dashboard/VisaTicketStatus";
 
 const DashboardOverview = () => {
   const { t } = useTranslation();
@@ -127,6 +128,9 @@ const DashboardOverview = () => {
           </Card>
         ))}
       </div>
+
+      {/* Visa & Ticket Status */}
+      <VisaTicketStatus />
 
       {/* Quick Actions */}
       <Card className="border-border">
