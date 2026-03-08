@@ -20,7 +20,7 @@ const AdminLayout = () => {
         </div>
 
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-40">
+          <header className="h-14 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-40 shadow-sm">
             <div className="flex items-center gap-2">
               <SidebarTrigger className="hidden md:flex" />
               <div className="md:hidden flex items-center gap-2">

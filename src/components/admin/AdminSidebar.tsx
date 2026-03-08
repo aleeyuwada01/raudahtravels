@@ -149,7 +149,7 @@ const AdminSidebar = () => {
   const visibleFlat = flatItems.filter((i) => !i.permission || hasPermission(i.permission));
 
   return (
-    <Sidebar className="border-r border-[hsl(0,0%,90%)] bg-[hsl(0,0%,97%)]" style={{ ["--sidebar-background" as string]: "0 0% 97%", ["--sidebar-foreground" as string]: "0 0% 15%" }}>
+    <Sidebar className="bg-sidebar" style={{ ["--sidebar-background" as string]: "0 0% 93%", ["--sidebar-foreground" as string]: "0 0% 15%" }}>
       {/* Brand */}
       <div className="px-5 pt-6 pb-5">
         <div className="flex items-center gap-3">
@@ -192,7 +192,7 @@ const AdminSidebar = () => {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="border-t border-[hsl(0,0%,90%)] p-4">
+      <SidebarFooter className="border-t border-sidebar-border p-4">
         <div className="flex items-center gap-3 mb-2">
           <Avatar className="h-9 w-9 border border-[hsl(0,0%,85%)]">
             <AvatarImage src={profile?.avatar_url || undefined} />
