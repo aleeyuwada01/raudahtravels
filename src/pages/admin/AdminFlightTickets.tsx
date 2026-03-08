@@ -158,6 +158,7 @@ const AdminFlightTickets = () => {
                 <TableHead>Passport</TableHead>
                 <TableHead>Package</TableHead>
                 <TableHead>Departure</TableHead>
+                <TableHead>Agent</TableHead>
                 <TableHead>Provider</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
