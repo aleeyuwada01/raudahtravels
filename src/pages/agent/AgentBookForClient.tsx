@@ -82,6 +82,8 @@ const AgentBookForClient = () => {
   const selectedClient = clients.find((c: any) => c.id === selectedClientId);
   const wholesalePrice = pkg.price - (pkg.price * (agent?.commission_rate || pkg.agent_discount) / 100);
   const savings = pkg.price - wholesalePrice;
+  const walletBalance = Number(wallet?.balance || 0);
+  const hasInsufficientBalance = walletBalance < wholesalePrice;
 
   const roomTypes = [
     ...(pkg.package_accommodations?.flatMap((a: any) => a.room_types || []) || []),
