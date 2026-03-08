@@ -1,52 +1,57 @@
 
 
-# Add Katsina Quotation Template + Fix First-Page Whitespace
+# Admin Table Redesign — Match Reference Style
+
+## Reference Analysis
+The uploaded screenshot shows:
+- Action buttons as individually colored square icon buttons: **View (eye)** = gray bg, **Edit** = green bg, **Trash** = red/pink bg
+- Each action icon sits inside a small rounded colored square (not ghost/transparent)
+- Table rows with generous spacing, clean borders
+- Pagination bar at the bottom (1, 2, 3, 4... with arrows)
+- SL column with zero-padded numbers
+- Status as green pill badges ("Active")
 
 ## Changes
 
-### 1. Add Katsina Documentary Template (`src/data/proposalTemplates.ts`)
+### 1. Action Button Style (all admin table pages)
+Replace current ghost-style action buttons with colored square icon buttons:
+- **View (Eye)**: `bg-muted/80 text-muted-foreground` — gray square
+- **Edit**: `bg-primary/15 text-primary` — green square  
+- **Delete (Trash)**: `bg-destructive/15 text-destructive` — red square
+- All with `rounded-lg h-8 w-8` sizing
 
-Add a new `katsinaTemplate: ProposalData` export with:
-- **proposalTitle**: "Comprehensive Quotation\nFor Documentary Production"
-- **clientName**: "Katsina State Government"
-- **clientTitle**: "Client:"
-- **clientLocation**: "Katsina State"
-- **date**: "2026"
-- **No coverLetter** (simple quotation format)
-- **executiveSummary**: Project description — Documentary on Government Intervention on Nutrition, 10–15 minutes
-- **problems**: Scope of Work items (concept development, scriptwriting, pre-production, field production, videography, drone, interviews, voice-over, post-production, motion graphics, music, final delivery)
-- **featurePages**: Empty array (no feature pages needed for this simple quotation)
-- **pricingTables**: Single table with the 4 cost rows:
-  - Pre-Production: ₦500,000
-  - Production: ₦1,200,000
-  - Post-Production: ₦500,000
-  - Publicizing & Media Distribution: ₦1,000,000
-- **grandTotal**: Two options shown — ₦3,200,000 (with publicizing) / ₦2,200,000 (without)
-- **timeline**: Single entry — "2–3 Weeks from date of initial payment"
-- **Payment terms** in appendixSections: "70% advance, 30% upon completion"
-- **Validity**: "30 Days from date of issuance"
-- **mouParties/mouClauses/mouSignatories**: Standard FADAK terms adapted for Katsina
+### 2. Add Pagination Component
+Add a reusable pagination section to tables with 10 items per page, page numbers, and prev/next arrows.
 
-Add to `templateList` array before "custom":
-```ts
-{ id: "katsina", name: "Katsina Documentary Quotation", data: katsinaTemplate },
+### 3. Files to Edit
+
+| File | Changes |
+|------|---------|
+| `src/pages/admin/AdminPilgrims.tsx` | Update action button styles + add pagination |
+| `src/pages/admin/AdminPackages.tsx` | Update action button styles + add pagination |
+| `src/pages/admin/AdminPayments.tsx` | Add SL column, update action styles, add pagination |
+| `src/pages/admin/AdminVisaManagement.tsx` | Add SL column, update action styles, add pagination |
+| `src/pages/admin/AdminFlightTickets.tsx` | Add SL column, update action styles, add pagination |
+| `src/pages/admin/AdminWalletManagement.tsx` | Add SL column, update action styles |
+| `src/pages/admin/AdminAgentApplications.tsx` | Add SL column, update action button styles |
+| `src/pages/admin/AdminStaffManagement.tsx` | Add SL column, update action styles |
+
+### Action Button Pattern (applied everywhere)
+```tsx
+// View
+<button className="h-8 w-8 rounded-lg bg-muted/80 text-muted-foreground flex items-center justify-center hover:bg-muted">
+  <Eye className="h-4 w-4" />
+</button>
+// Edit
+<button className="h-8 w-8 rounded-lg bg-primary/15 text-primary flex items-center justify-center hover:bg-primary/20">
+  <Edit className="h-4 w-4" />
+</button>
+// Delete
+<button className="h-8 w-8 rounded-lg bg-destructive/15 text-destructive flex items-center justify-center hover:bg-destructive/20">
+  <Trash2 className="h-4 w-4" />
+</button>
 ```
 
-### 2. Fix First-Page Whitespace in PDF (`src/pages/Proposal.tsx`)
-
-**Root cause**: The `CoverPage` component renders two separate `.proposal-page` divs — one for letterhead/cover letter and one for the title block (forced to page 2 via `data-pdf-new-page`). For templates without a cover letter (like Raudah and the new Katsina template), this creates an empty/sparse first page.
-
-**Fix**: Restructure `CoverPage` to render as a **single page** when there is no `coverLetter`. The title block content should appear on page 1, directly after the letterhead.
-
-- **When `data.coverLetter` exists**: Keep the current two-page layout (letterhead + letter on page 1, title on page 2)
-- **When no `coverLetter`**: Render everything in a single `.proposal-page` div with one `data-pdf-section` — letterhead at top, then title block, client info, and date — no `data-pdf-new-page` attribute
-
-This ensures content starts on page 1 for simple quotation templates.
-
-### Files to Modify
-
-| File | Change |
-|------|--------|
-| `src/data/proposalTemplates.ts` | Add `katsinaTemplate` export and add to `templateList` |
-| `src/pages/Proposal.tsx` | Restructure `CoverPage` to conditionally render single-page or two-page layout based on presence of `coverLetter` |
+### Pagination Pattern
+Each table page gets `currentPage` state and displays 10 rows per page with a pagination bar using the existing `Pagination` component at the bottom of the table card.
 
