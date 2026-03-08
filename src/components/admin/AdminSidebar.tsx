@@ -168,10 +168,10 @@ const AdminSidebar = () => {
                 key={item.url}
                 to={item.url}
                 end={item.url === "/admin"}
-                className="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-[15px] text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors"
+                className="flex items-center gap-3.5 px-3 py-3 rounded-xl text-[16px] text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors"
                 activeClassName="bg-[hsl(40,30%,95%)] text-[hsl(0,0%,10%)] font-semibold shadow-sm"
               >
-                <item.icon className="h-5 w-5 shrink-0 text-[hsl(0,0%,45%)]" />
+                <item.icon className="h-6 w-6 shrink-0 text-[hsl(0,0%,45%)]" />
                 <span>{item.title}</span>
               </NavLink>
             ))}
