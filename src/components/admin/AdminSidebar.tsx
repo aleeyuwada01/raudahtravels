@@ -124,7 +124,7 @@ const CollapsibleGroup = ({
                   to={item.url}
                   end={false}
                   className="flex items-center w-full ml-6 px-3 py-2.5 rounded-lg text-[16px] text-[hsl(0,0%,45%)] hover:bg-[hsl(0,0%,90%)] hover:text-[hsl(0,0%,15%)] transition-colors"
-                  activeClassName="bg-primary/10 text-primary font-semibold"
+                  activeClassName="bg-primary text-primary-foreground font-semibold"
                 >
                   <span>{item.title}</span>
                 </NavLink>
