@@ -29,7 +29,12 @@ const ProtectedRoute = ({ children, requiredRole }: Props) => {
   }
 
   if (requiredRole && !hasRole(requiredRole)) {
-    return <Navigate to="/dashboard" replace />;
+    // Allow staff/support/moderator to access admin routes with limited permissions
+    if (requiredRole === "admin" && (hasRole("staff") || hasRole("support") || hasRole("moderator"))) {
+      // Allowed — sidebar will gate individual sections
+    } else {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   return <>{children}</>;
