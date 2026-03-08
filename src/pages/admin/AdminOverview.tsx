@@ -199,6 +199,7 @@ const AdminOverview = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
       </div>
 
       {/* Charts Row */}
