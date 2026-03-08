@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Users, Eye, Printer } from "lucide-react";
+import { Users, Eye, Printer, Edit, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
 
 const AdminPilgrims = () => {
