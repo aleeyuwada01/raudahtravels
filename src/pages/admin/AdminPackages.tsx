@@ -248,7 +248,7 @@ const AdminPackages = () => {
                   <Input type="number" value={form.minimum_deposit || 0} onChange={(e) => setForm({ ...form, minimum_deposit: Number(e.target.value) })} />
                 </div>
               </div>
-              <Button onClick={handleSave} disabled={upsert.isPending} className="gold-gradient text-secondary-foreground font-semibold">
+              <Button onClick={handleSave} disabled={upsert.isPending}>
                 {upsert.isPending ? "Saving..." : editingId ? "Update Package" : "Create Package"}
               </Button>
             </div>
