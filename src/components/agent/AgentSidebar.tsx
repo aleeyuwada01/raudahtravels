@@ -6,6 +6,7 @@ import {
   Package,
   CreditCard,
   PiggyBank,
+  FileCheck,
   LogOut,
 } from "lucide-react";
 import {
