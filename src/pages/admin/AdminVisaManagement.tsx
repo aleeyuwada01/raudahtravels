@@ -35,7 +35,7 @@ const AdminVisaManagement = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("bookings")
-        .select("id, full_name, reference, status, passport_number, visa_status, visa_provider, visa_file_url, admin_visa_message, created_at, packages(name, type)")
+        .select("id, full_name, reference, status, passport_number, visa_status, visa_provider, visa_file_url, admin_visa_message, agent_id, created_at, packages(name, type), agents(business_name)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data || [];
@@ -164,6 +164,7 @@ const AdminVisaManagement = () => {
                 <TableHead>Reference</TableHead>
                 <TableHead>Passport</TableHead>
                 <TableHead>Package</TableHead>
+                <TableHead>Agent</TableHead>
                 <TableHead>Visa Provider</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -176,7 +177,7 @@ const AdminVisaManagement = () => {
                 </TableRow>
               ) : filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     <FileCheck className="h-8 w-8 mx-auto mb-2 opacity-30" />
                     No pilgrims found
                   </TableCell>
@@ -192,6 +193,13 @@ const AdminVisaManagement = () => {
                         <p className="text-sm">{b.packages?.name || "—"}</p>
                         <Badge variant="outline" className="capitalize text-xs">{b.packages?.type || "—"}</Badge>
                       </div>
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {b.agent_id ? (
+                        <Badge variant="outline" className="text-xs">{(b as any).agents?.business_name || "Agent"}</Badge>
+                      ) : (
+                        <span className="text-muted-foreground">Direct</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-sm">{b.visa_provider || "—"}</TableCell>
                     <TableCell>

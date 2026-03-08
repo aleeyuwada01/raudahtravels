@@ -35,7 +35,7 @@ const AdminFlightTickets = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("bookings")
-        .select("id, full_name, reference, status, passport_number, ticket_status, flight_provider, ticket_file_url, admin_ticket_message, departure_city, created_at, packages(name, type)")
+        .select("id, full_name, reference, status, passport_number, ticket_status, flight_provider, ticket_file_url, admin_ticket_message, departure_city, agent_id, created_at, packages(name, type), agents(business_name)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data || [];
@@ -158,6 +158,7 @@ const AdminFlightTickets = () => {
                 <TableHead>Passport</TableHead>
                 <TableHead>Package</TableHead>
                 <TableHead>Departure</TableHead>
+                <TableHead>Agent</TableHead>
                 <TableHead>Provider</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -168,7 +169,7 @@ const AdminFlightTickets = () => {
                 <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading...</TableCell></TableRow>
               ) : filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                     <Plane className="h-8 w-8 mx-auto mb-2 opacity-30" />
                     No pilgrims found
                   </TableCell>
@@ -186,6 +187,13 @@ const AdminFlightTickets = () => {
                       </div>
                     </TableCell>
                     <TableCell>{b.departure_city || "—"}</TableCell>
+                    <TableCell className="text-xs">
+                      {b.agent_id ? (
+                        <Badge variant="outline" className="text-xs">{(b as any).agents?.business_name || "Agent"}</Badge>
+                      ) : (
+                        <span className="text-muted-foreground">Direct</span>
+                      )}
+                    </TableCell>
                     <TableCell className="text-sm">{b.flight_provider || "—"}</TableCell>
                     <TableCell>
                       <Badge className={ticketStatusColors[b.ticket_status] || "bg-muted"}>{b.ticket_status}</Badge>
