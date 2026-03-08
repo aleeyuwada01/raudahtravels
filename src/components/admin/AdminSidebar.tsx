@@ -114,7 +114,7 @@ const CollapsibleGroup = ({
       <CollapsibleContent>
         <div className="relative ml-[26px] mt-0.5 mb-1">
           {/* Vertical connector line */}
-          <div className="absolute left-0 top-0 bottom-3 w-px bg-primary/30" />
+          <div className="absolute left-0 top-0 bottom-3 w-px bg-[hsl(0,0%,78%)]" />
           <div className="space-y-0.5">
             {visibleItems.map((item, idx) => (
               <div key={item.url} className="relative flex items-center">
