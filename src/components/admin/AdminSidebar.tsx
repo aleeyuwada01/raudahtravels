@@ -119,7 +119,7 @@ const CollapsibleGroup = ({
             {visibleItems.map((item, idx) => (
               <div key={item.url} className="relative flex items-center">
                 {/* Horizontal connector branch */}
-                <div className="absolute left-0 top-1/2 w-4 h-px bg-primary/30" />
+                <div className="absolute left-0 top-1/2 w-4 h-px bg-[hsl(0,0%,78%)]" />
                 <NavLink
                   to={item.url}
                   end={false}
