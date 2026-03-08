@@ -148,6 +148,7 @@ const App = () => (
                   <Route path="book/:id" element={<AgentBookForClient />} />
                   <Route path="bookings" element={<AgentBookings />} />
                   <Route path="commissions" element={<AgentCommissions />} />
+                  <Route path="visa-tickets" element={<AgentVisaTickets />} />
                 </Route>
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
