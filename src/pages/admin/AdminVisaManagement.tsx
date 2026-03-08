@@ -164,6 +164,7 @@ const AdminVisaManagement = () => {
                 <TableHead>Reference</TableHead>
                 <TableHead>Passport</TableHead>
                 <TableHead>Package</TableHead>
+                <TableHead>Agent</TableHead>
                 <TableHead>Visa Provider</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
