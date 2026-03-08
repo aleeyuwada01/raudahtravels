@@ -130,28 +130,26 @@ const AdminOverview = () => {
   });
 
   const statCards = [
-    { label: "Total Revenue", value: formatPrice(stats?.totalRevenue || 0), icon: CreditCard, color: "text-primary", bg: "bg-primary/10", trend: "+12%", up: true },
-    { label: "Total Bookings", value: String(stats?.totalBookings || 0), icon: CalendarCheck, color: "text-secondary", bg: "bg-secondary/10", trend: "+8%", up: true },
-    { label: "Active Pilgrims", value: String(stats?.confirmedBookings || 0), icon: UserCheck, color: "text-primary", bg: "bg-primary/10" },
-    { label: "Pending Payments", value: String(stats?.pendingPayments || 0), icon: CreditCard, color: "text-destructive", bg: "bg-destructive/10", urgent: (stats?.pendingPayments || 0) > 0 },
-    { label: "Total Agents", value: String(stats?.agents || 0), icon: Users, color: "text-secondary", bg: "bg-secondary/10" },
-    { label: "Conversion Rate", value: `${stats?.conversionRate || 0}%`, icon: TrendingUp, color: "text-primary", bg: "bg-primary/10" },
+    { label: "Total Pilgrims", value: String(stats?.pilgrims || 0), icon: Users, trend: "+12%", up: true },
+    { label: "Total Revenue", value: formatPrice(stats?.totalRevenue || 0), icon: CreditCard, trend: "+8%", up: true },
+    { label: "Total Bookings", value: String(stats?.totalBookings || 0), icon: CalendarCheck, trend: "+5%", up: true },
+    { label: "Active Agents", value: String(stats?.agents || 0), icon: UserCheck, trend: "+3%", up: true },
   ];
 
   const statusColors: Record<string, string> = {
-    pending: "hsl(43, 72%, 52%)",
-    confirmed: "hsl(162, 90%, 17%)",
+    pending: "hsl(45, 80%, 50%)",
+    confirmed: "hsl(var(--primary))",
     cancelled: "hsl(0, 84%, 60%)",
-    completed: "hsl(162, 70%, 25%)",
+    completed: "hsl(139, 46%, 40%)",
   };
 
-  const pieColors = ["hsl(162, 90%, 17%)", "hsl(43, 72%, 52%)"];
+  const pieColors = ["hsl(var(--primary))", "hsl(0, 0%, 70%)"];
 
   const quickActions = [
-    { label: "Manage Packages", icon: Package, href: "/admin/packages", color: "bg-primary/10 text-primary" },
-    { label: "Verify Payments", icon: CheckCircle2, href: "/admin/payments", color: "bg-destructive/10 text-destructive" },
-    { label: "View Pilgrims", icon: Eye, href: "/admin/pilgrims", color: "bg-secondary/10 text-secondary" },
-    { label: "AI Assistant", icon: Bot, href: "/admin/ai-assistant", color: "bg-primary/10 text-primary" },
+    { label: "Manage Packages", icon: Package, href: "/admin/packages" },
+    { label: "Verify Payments", icon: CheckCircle2, href: "/admin/payments" },
+    { label: "View Pilgrims", icon: Eye, href: "/admin/pilgrims" },
+    { label: "AI Assistant", icon: Bot, href: "/admin/ai-assistant" },
   ];
 
   const statusBadgeVariant = (status: string) => {
@@ -169,31 +167,33 @@ const AdminOverview = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">Admin Dashboard</h1>
+        <h1 className="font-body text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
         <p className="text-sm text-muted-foreground mt-1">Overview of your Hajj & Umrah operations</p>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+      {/* Stat Cards — 4 big cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {statCards.map((c) => (
-          <Card key={c.label} className="border-border relative overflow-hidden">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className={`p-2 rounded-lg ${c.bg}`}>
-                  <c.icon className={`h-4 w-4 ${c.color}`} />
+          <Card key={c.label} className="border-border/50 shadow-none">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-sm font-medium text-muted-foreground">{c.label}</p>
+                <div className="p-2.5 rounded-xl bg-primary/10">
+                  <c.icon className="h-5 w-5 text-primary" />
                 </div>
-                {c.urgent && (
-                  <span className="flex h-2 w-2 rounded-full bg-destructive animate-pulse" />
-                )}
-                {c.trend && (
-                  <span className={`flex items-center text-xs font-medium ${c.up ? "text-primary" : "text-destructive"}`}>
-                    {c.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                    {c.trend}
-                  </span>
-                )}
               </div>
-              <p className="text-xs text-muted-foreground truncate">{c.label}</p>
-              <p className="text-lg font-heading font-bold text-foreground truncate">{c.value}</p>
+              <p className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">{c.value}</p>
+              {c.trend && (
+                <div className="flex items-center gap-1.5 mt-3">
+                  {c.up ? (
+                    <ArrowUpRight className="h-4 w-4 text-primary" />
+                  ) : (
+                    <ArrowDownRight className="h-4 w-4 text-destructive" />
+                  )}
+                  <span className={`text-sm font-medium ${c.up ? "text-primary" : "text-destructive"}`}>{c.trend}</span>
+                  <span className="text-sm text-muted-foreground">vs last month</span>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
