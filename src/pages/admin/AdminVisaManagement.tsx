@@ -35,7 +35,7 @@ const AdminVisaManagement = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("bookings")
-        .select("id, full_name, reference, status, passport_number, visa_status, visa_provider, visa_file_url, admin_visa_message, created_at, packages(name, type)")
+        .select("id, full_name, reference, status, passport_number, visa_status, visa_provider, visa_file_url, admin_visa_message, agent_id, created_at, packages(name, type), agents(business_name)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data || [];
