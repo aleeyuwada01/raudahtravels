@@ -38,6 +38,17 @@ const AdminAnalytics = lazyWithRetry(() => import("./pages/admin/AdminAnalytics"
 const AdminIdTags = lazyWithRetry(() => import("./pages/admin/AdminIdTags"));
 const AdminAgentApplications = lazyWithRetry(() => import("./pages/admin/AdminAgentApplications"));
 const AdminAiAssistant = lazyWithRetry(() => import("./pages/admin/AdminAiAssistant"));
+const AdminVisaManagement = lazyWithRetry(() => import("./pages/admin/AdminVisaManagement"));
+const AdminFlightTickets = lazyWithRetry(() => import("./pages/admin/AdminFlightTickets"));
+const AdminAgents = lazyWithRetry(() => import("./pages/admin/AdminAgents"));
+const AdminBankAccounts = lazyWithRetry(() => import("./pages/admin/AdminBankAccounts"));
+const AdminActivityLog = lazyWithRetry(() => import("./pages/admin/AdminActivityLog"));
+const AdminAmendments = lazyWithRetry(() => import("./pages/admin/AdminAmendments"));
+const AdminSupportTickets = lazyWithRetry(() => import("./pages/admin/AdminSupportTickets"));
+const AdminStaffManagement = lazyWithRetry(() => import("./pages/admin/AdminStaffManagement"));
+const AdminTeamChat = lazyWithRetry(() => import("./pages/admin/AdminTeamChat"));
+const AdminBookingForm = lazyWithRetry(() => import("./pages/admin/AdminBookingForm"));
+const AdminSettings = lazyWithRetry(() => import("./pages/admin/AdminSettings"));
 const AgentLayout = lazyWithRetry(() => import("./components/agent/AgentLayout"));
 const AgentOverview = lazyWithRetry(() => import("./pages/agent/AgentOverview"));
 const AgentClients = lazyWithRetry(() => import("./pages/agent/AgentClients"));
