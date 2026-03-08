@@ -308,27 +308,26 @@ const AdminOverview = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Recent Bookings */}
-        <Card className="border-border">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-heading">Recent Bookings</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-3 flex flex-row items-center justify-between px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Recent Bookings</CardTitle>
             <Link to="/admin/pilgrims">
-              <Button variant="ghost" size="sm" className="text-xs">View All</Button>
+              <Button variant="ghost" size="sm" className="text-sm">View All</Button>
             </Link>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-7 pb-7">
             {recentBookings.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-4 text-center">No bookings yet</p>
+              <p className="text-base text-muted-foreground py-6 text-center">No bookings yet</p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {recentBookings.map((b) => (
-                  <div key={b.id} className="flex items-center justify-between gap-2 text-sm">
+                  <div key={b.id} className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-foreground truncate">{b.full_name}</p>
-                      <p className="text-xs text-muted-foreground">{b.reference || b.id.slice(0, 8)}</p>
+                      <p className="text-base font-medium text-foreground truncate">{b.full_name}</p>
+                      <p className="text-sm text-muted-foreground">{b.reference || b.id.slice(0, 8)}</p>
                     </div>
-                    <Badge variant={statusBadgeVariant(b.status)} className="text-[10px] capitalize shrink-0">
+                    <Badge variant={statusBadgeVariant(b.status)} className="text-xs capitalize shrink-0">
                       {b.status}
                     </Badge>
                   </div>
@@ -338,32 +337,31 @@ const AdminOverview = () => {
           </CardContent>
         </Card>
 
-        {/* Recent Payments */}
-        <Card className="border-border">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-heading">Recent Payments</CardTitle>
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-3 flex flex-row items-center justify-between px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Recent Payments</CardTitle>
             <Link to="/admin/payments">
-              <Button variant="ghost" size="sm" className="text-xs">View All</Button>
+              <Button variant="ghost" size="sm" className="text-sm">View All</Button>
             </Link>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-7 pb-7">
             {recentPayments.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-4 text-center">No payments yet</p>
+              <p className="text-base text-muted-foreground py-6 text-center">No payments yet</p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {recentPayments.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between gap-2 text-sm">
+                  <div key={p.id} className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-foreground">{formatPrice(p.amount)}</p>
-                      <p className="text-xs text-muted-foreground capitalize">{p.method.replace("_", " ")}</p>
+                      <p className="text-base font-medium text-foreground">{formatPrice(p.amount)}</p>
+                      <p className="text-sm text-muted-foreground capitalize">{p.method.replace("_", " ")}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <Badge variant={statusBadgeVariant(p.status)} className="text-[10px] capitalize">
+                      <Badge variant={statusBadgeVariant(p.status)} className="text-xs capitalize">
                         {p.status}
                       </Badge>
                       {p.status === "pending" && (
                         <Link to="/admin/payments">
-                          <ShieldCheck className="h-4 w-4 text-primary cursor-pointer" />
+                          <ShieldCheck className="h-5 w-5 text-primary cursor-pointer" />
                         </Link>
                       )}
                     </div>
