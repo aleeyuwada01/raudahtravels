@@ -61,6 +61,21 @@ const AgentBookForClient = () => {
     enabled: !!agent?.id,
   });
 
+  // Fetch wallet balance
+  const { data: wallet } = useQuery({
+    queryKey: ["agent-wallet-booking", agent?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("agent_wallets")
+        .select("id, balance")
+        .eq("agent_id", agent!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!agent?.id,
+  });
+
   if (pkgLoading) return <div className="p-8"><Skeleton className="h-96" /></div>;
   if (!pkg) return <div className="text-center py-12">Package not found</div>;
 
