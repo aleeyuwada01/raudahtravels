@@ -101,9 +101,9 @@ const CollapsibleGroup = ({
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
-      <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-3 rounded-xl text-[16px] font-medium text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors cursor-pointer">
-        <span className="flex items-center gap-3.5">
-          <group.icon className="h-6 w-6 shrink-0 text-[hsl(0,0%,45%)]" />
+      <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-3 rounded-xl text-[17px] font-medium text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors cursor-pointer">
+        <span className="flex items-center gap-4">
+          <group.icon className="h-[22px] w-[22px] shrink-0 text-[hsl(0,0%,45%)]" />
           <span>{group.label}</span>
         </span>
         <ChevronDown className={cn(
