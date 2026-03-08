@@ -35,7 +35,7 @@ const AdminFlightTickets = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("bookings")
-        .select("id, full_name, reference, status, passport_number, ticket_status, flight_provider, ticket_file_url, admin_ticket_message, departure_city, created_at, packages(name, type)")
+        .select("id, full_name, reference, status, passport_number, ticket_status, flight_provider, ticket_file_url, admin_ticket_message, departure_city, agent_id, created_at, packages(name, type), agents(business_name)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data || [];
