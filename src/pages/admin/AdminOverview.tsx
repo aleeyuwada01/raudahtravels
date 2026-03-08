@@ -256,16 +256,16 @@ const AdminOverview = () => {
       </div>
 
       {/* Package Split + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Package Types</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Package Types</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col items-center">
-            <div className="h-[140px] w-full">
+          <CardContent className="flex flex-col items-center px-7 pb-7">
+            <div className="h-[150px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={packageSplit} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={55} paddingAngle={4}>
+                  <Pie data={packageSplit} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={60} paddingAngle={4}>
                     {packageSplit.map((_, i) => (
                       <Cell key={i} fill={pieColors[i % pieColors.length]} />
                     ))}
@@ -274,32 +274,31 @@ const AdminOverview = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex gap-4 mt-2">
+            <div className="flex gap-5 mt-3">
               {packageSplit.map((entry, i) => (
-                <div key={entry.type} className="flex items-center gap-1.5 text-xs">
-                  <span className="h-2 w-2 rounded-full" style={{ background: pieColors[i % pieColors.length] }} />
+                <div key={entry.type} className="flex items-center gap-2 text-sm">
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: pieColors[i % pieColors.length] }} />
                   <span className="text-muted-foreground">{entry.type}</span>
-                  <span className="font-medium text-foreground">{entry.count}</span>
+                  <span className="font-semibold text-foreground">{entry.count}</span>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
-        <Card className="lg:col-span-2 border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Quick Actions</CardTitle>
+        <Card className="lg:col-span-2 border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <CardContent className="px-7 pb-7">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {quickActions.map((a) => (
                 <Link key={a.label} to={a.href}>
-                  <div className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer text-center">
-                    <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
-                      <a.icon className="h-5 w-5" />
+                  <div className="flex flex-col items-center gap-3 p-5 rounded-xl border border-border hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer text-center">
+                    <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                      <a.icon className="h-6 w-6" />
                     </div>
-                    <span className="text-xs font-medium text-foreground">{a.label}</span>
+                    <span className="text-sm font-medium text-foreground">{a.label}</span>
                   </div>
                 </Link>
               ))}
