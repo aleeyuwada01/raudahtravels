@@ -10,6 +10,17 @@ import {
   UserPlus,
   Bot,
   LogOut,
+  FileCheck,
+  Plane,
+  UserCog,
+  Landmark,
+  Activity,
+  FilePenLine,
+  HeadphonesIcon,
+  Shield,
+  MessageSquare,
+  ClipboardList,
+  Settings,
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,17 +35,68 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-const menuItems = [
+const mainMenuItems = [
   { title: "Overview", url: "/admin", icon: LayoutDashboard },
   { title: "Packages", url: "/admin/packages", icon: Package },
   { title: "Payments", url: "/admin/payments", icon: CreditCard },
   { title: "Pilgrims", url: "/admin/pilgrims", icon: Users },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "ID Tags", url: "/admin/id-tags", icon: Barcode },
-  { title: "Agent Applications", url: "/admin/agent-applications", icon: UserPlus },
-  { title: "AI Assistant", url: "/admin/ai-assistant", icon: Bot },
 ];
+
+const documentMenuItems = [
+  { title: "Visa Management", url: "/admin/visa-management", icon: FileCheck },
+  { title: "Flight Tickets", url: "/admin/flight-tickets", icon: Plane },
+];
+
+const agentMenuItems = [
+  { title: "Agents", url: "/admin/agents", icon: UserCog },
+  { title: "Agent Applications", url: "/admin/agent-applications", icon: UserPlus },
+];
+
+const operationsMenuItems = [
+  { title: "Bank Accounts", url: "/admin/bank-accounts", icon: Landmark },
+  { title: "Activity Log", url: "/admin/activity-log", icon: Activity },
+  { title: "Amendments", url: "/admin/amendments", icon: FilePenLine },
+  { title: "Support Tickets", url: "/admin/support-tickets", icon: HeadphonesIcon },
+];
+
+const systemMenuItems = [
+  { title: "Staff Management", url: "/admin/staff-management", icon: Shield },
+  { title: "Team Chat", url: "/admin/team-chat", icon: MessageSquare },
+  { title: "Booking Form", url: "/admin/booking-form", icon: ClipboardList },
+  { title: "AI Assistant", url: "/admin/ai-assistant", icon: Bot },
+  { title: "Settings", url: "/admin/settings", icon: Settings },
+];
+
+const MenuGroup = ({ label, items }: { label: string; items: typeof mainMenuItems }) => (
+  <SidebarGroup>
+    <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">
+      {label}
+    </SidebarGroupLabel>
+    <SidebarGroupContent>
+      <SidebarMenu>
+        {items.map((item) => (
+          <SidebarMenuItem key={item.url}>
+            <SidebarMenuButton asChild>
+              <NavLink
+                to={item.url}
+                end={item.url === "/admin"}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                activeClassName="bg-sidebar-accent text-sidebar-primary font-medium"
+              >
+                <item.icon className="h-4 w-4 shrink-0" />
+                <span className="text-sm">{item.title}</span>
+              </NavLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
+      </SidebarMenu>
+    </SidebarGroupContent>
+  </SidebarGroup>
+);
 
 const AdminSidebar = () => {
   const { profile, signOut } = useAuth();
@@ -56,30 +118,13 @@ const AdminSidebar = () => {
       </div>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">
-            Admin Menu
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      end={item.url === "/admin"}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
-                      activeClassName="bg-sidebar-accent text-sidebar-primary font-medium"
-                    >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      <span className="text-sm">{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <ScrollArea className="flex-1">
+          <MenuGroup label="Dashboard" items={mainMenuItems} />
+          <MenuGroup label="Documents" items={documentMenuItems} />
+          <MenuGroup label="Agents" items={agentMenuItems} />
+          <MenuGroup label="Operations" items={operationsMenuItems} />
+          <MenuGroup label="System" items={systemMenuItems} />
+        </ScrollArea>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-4">
