@@ -102,6 +102,7 @@ const AdminPilgrims = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>SL</TableHead>
                   <TableHead>Pilgrim</TableHead>
                   <TableHead>Reference</TableHead>
                   <TableHead>Package</TableHead>
@@ -110,33 +111,44 @@ const AdminPilgrims = () => {
                   <TableHead>Departure</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((b) => {
+                {filtered.map((b, index) => {
                   const pkg = (b as any).packages;
                   return (
                     <TableRow key={b.id}>
+                      <TableCell className="text-muted-foreground font-medium">{String(index + 1).padStart(2, '0')}</TableCell>
                       <TableCell className="font-medium">{b.full_name}</TableCell>
-                      <TableCell className="text-xs font-mono">{b.reference || b.id.slice(0, 8)}</TableCell>
+                      <TableCell className="font-mono text-muted-foreground">{b.reference || b.id.slice(0, 8)}</TableCell>
                       <TableCell>
                         <div>
-                          <p className="text-sm">{pkg?.name || "—"}</p>
+                          <p>{pkg?.name || "—"}</p>
                           <Badge variant="outline" className="capitalize text-xs mt-0.5">{pkg?.type || "—"}</Badge>
                         </div>
                       </TableCell>
-                      <TableCell className="text-xs">{b.passport_number || "—"}</TableCell>
+                      <TableCell className="text-muted-foreground">{b.passport_number || "—"}</TableCell>
                       <TableCell className="capitalize">{b.gender || "—"}</TableCell>
                       <TableCell>{b.departure_city || "—"}</TableCell>
                       <TableCell>
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[b.status]}`}>{b.status}</span>
+                        <Badge variant={b.status === "confirmed" ? "default" : b.status === "cancelled" ? "destructive" : "secondary"} className="capitalize">
+                          {b.status}
+                        </Badge>
                       </TableCell>
-                      <TableCell className="text-xs">{new Date(b.created_at).toLocaleDateString()}</TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" onClick={() => setSelectedBooking(b)}>
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                      <TableCell className="text-muted-foreground">{new Date(b.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-center gap-1">
+                          <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:text-primary hover:bg-primary/10" onClick={() => setSelectedBooking(b)}>
+                            <Eye className="h-[18px] w-[18px]" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10">
+                            <Edit className="h-[18px] w-[18px]" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+                            <Trash2 className="h-[18px] w-[18px]" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
