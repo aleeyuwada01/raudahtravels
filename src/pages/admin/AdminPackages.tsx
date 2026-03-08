@@ -127,8 +127,8 @@ const AdminPackages = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Package Management</h1>
-          <p className="text-sm text-muted-foreground mt-1">Create and manage travel packages</p>
+          <h1 className="font-body text-3xl font-bold text-foreground">Package Management</h1>
+          <p className="text-base text-muted-foreground mt-1">Create and manage travel packages</p>
         </div>
         <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) { setEditingId(null); setForm(emptyForm); } }}>
           <DialogTrigger asChild>
