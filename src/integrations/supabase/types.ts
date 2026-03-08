@@ -153,6 +153,8 @@ export type Database = {
       }
       bookings: {
         Row: {
+          admin_ticket_message: string | null
+          admin_visa_message: string | null
           agent_client_id: string | null
           agent_id: string | null
           created_at: string
@@ -161,6 +163,7 @@ export type Database = {
           emergency_contact_name: string | null
           emergency_contact_phone: string | null
           emergency_contact_relationship: string | null
+          flight_provider: string | null
           full_name: string
           gender: string | null
           id: string
@@ -172,10 +175,17 @@ export type Database = {
           room_preference: string | null
           special_requests: string | null
           status: Database["public"]["Enums"]["booking_status"]
+          ticket_file_url: string | null
+          ticket_status: string | null
           updated_at: string
           user_id: string
+          visa_file_url: string | null
+          visa_provider: string | null
+          visa_status: string | null
         }
         Insert: {
+          admin_ticket_message?: string | null
+          admin_visa_message?: string | null
           agent_client_id?: string | null
           agent_id?: string | null
           created_at?: string
@@ -184,6 +194,7 @@ export type Database = {
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           emergency_contact_relationship?: string | null
+          flight_provider?: string | null
           full_name: string
           gender?: string | null
           id?: string
@@ -195,10 +206,17 @@ export type Database = {
           room_preference?: string | null
           special_requests?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
+          ticket_file_url?: string | null
+          ticket_status?: string | null
           updated_at?: string
           user_id: string
+          visa_file_url?: string | null
+          visa_provider?: string | null
+          visa_status?: string | null
         }
         Update: {
+          admin_ticket_message?: string | null
+          admin_visa_message?: string | null
           agent_client_id?: string | null
           agent_id?: string | null
           created_at?: string
@@ -207,6 +225,7 @@ export type Database = {
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           emergency_contact_relationship?: string | null
+          flight_provider?: string | null
           full_name?: string
           gender?: string | null
           id?: string
@@ -218,8 +237,13 @@ export type Database = {
           room_preference?: string | null
           special_requests?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
+          ticket_file_url?: string | null
+          ticket_status?: string | null
           updated_at?: string
           user_id?: string
+          visa_file_url?: string | null
+          visa_provider?: string | null
+          visa_status?: string | null
         }
         Relationships: [
           {
