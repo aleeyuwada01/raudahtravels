@@ -28,6 +28,7 @@ const DashboardPayments = lazyWithRetry(() => import("./pages/dashboard/Dashboar
 const DashboardDocuments = lazyWithRetry(() => import("./pages/dashboard/DashboardDocuments"));
 const DashboardProfile = lazyWithRetry(() => import("./pages/dashboard/DashboardProfile"));
 const DashboardSupport = lazyWithRetry(() => import("./pages/dashboard/DashboardSupport"));
+const DashboardVisaTickets = lazyWithRetry(() => import("./pages/dashboard/DashboardVisaTickets"));
 const BookingWizard = lazyWithRetry(() => import("./pages/dashboard/BookingWizard"));
 const AdminLayout = lazyWithRetry(() => import("./components/admin/AdminLayout"));
 const AdminOverview = lazyWithRetry(() => import("./pages/admin/AdminOverview"));
