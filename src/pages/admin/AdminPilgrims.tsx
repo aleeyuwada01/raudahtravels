@@ -79,14 +79,14 @@ const AdminPilgrims = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Pilgrim Management</h1>
-          <p className="text-sm text-muted-foreground mt-1">{bookings.length} total bookings</p>
+          <h1 className="font-body text-3xl font-bold text-foreground">Pilgrim Management</h1>
+          <p className="text-base text-muted-foreground mt-1">{bookings.length} total bookings</p>
         </div>
         <Input
           placeholder="Search by name, ref, passport..."
-          className="max-w-xs"
+          className="max-w-xs h-11 text-base"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
