@@ -202,14 +202,13 @@ const AdminOverview = () => {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Revenue Trend */}
-        <Card className="lg:col-span-2 border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Revenue Trend</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Card className="lg:col-span-2 border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Revenue Trend</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ChartContainer config={{ revenue: { label: "Revenue", color: "hsl(var(--primary))" } }} className="h-[200px] w-full">
+          <CardContent className="px-7 pb-7">
+            <ChartContainer config={{ revenue: { label: "Revenue", color: "hsl(var(--primary))" } }} className="h-[220px] w-full">
               <AreaChart data={revenueTrend}>
                 <defs>
                   <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
@@ -217,8 +216,8 @@ const AdminOverview = () => {
                     <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={11} />
-                <YAxis tickLine={false} axisLine={false} fontSize={11} tickFormatter={(v) => `₦${(v / 1000000).toFixed(0)}M`} />
+                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={13} />
+                <YAxis tickLine={false} axisLine={false} fontSize={13} tickFormatter={(v) => `₦${(v / 1000000).toFixed(0)}M`} />
                 <ChartTooltip content={<ChartTooltipContent formatter={(value) => formatPrice(Number(value))} />} />
                 <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fill="url(#revenueGrad)" strokeWidth={2} />
               </AreaChart>
@@ -226,16 +225,15 @@ const AdminOverview = () => {
           </CardContent>
         </Card>
 
-        {/* Booking Status Donut */}
-        <Card className="border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Booking Status</CardTitle>
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Booking Status</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col items-center">
-            <div className="h-[160px] w-full">
+          <CardContent className="flex flex-col items-center px-7 pb-7">
+            <div className="h-[170px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={bookingBreakdown} dataKey="count" nameKey="status" cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={3}>
+                  <Pie data={bookingBreakdown} dataKey="count" nameKey="status" cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3}>
                     {bookingBreakdown.map((entry) => (
                       <Cell key={entry.status} fill={statusColors[entry.status] || "hsl(var(--muted))"} />
                     ))}
@@ -244,12 +242,12 @@ const AdminOverview = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex flex-wrap gap-3 mt-2 justify-center">
+            <div className="flex flex-wrap gap-4 mt-3 justify-center">
               {bookingBreakdown.map((entry) => (
-                <div key={entry.status} className="flex items-center gap-1.5 text-xs">
-                  <span className="h-2 w-2 rounded-full" style={{ background: statusColors[entry.status] }} />
+                <div key={entry.status} className="flex items-center gap-2 text-sm">
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: statusColors[entry.status] }} />
                   <span className="capitalize text-muted-foreground">{entry.status}</span>
-                  <span className="font-medium text-foreground">{entry.count}</span>
+                  <span className="font-semibold text-foreground">{entry.count}</span>
                 </div>
               ))}
             </div>
