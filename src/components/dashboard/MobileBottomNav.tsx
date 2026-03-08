@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { NavLink } from "@/components/NavLink";
-import { LayoutDashboard, Package, CalendarCheck, User } from "lucide-react";
+import { LayoutDashboard, Package, CalendarCheck, ShieldCheck, User } from "lucide-react";
 
 const navItems = [
   { titleKey: "dashboard.mobile.home", url: "/dashboard", icon: LayoutDashboard },
   { titleKey: "dashboard.mobile.packages", url: "/dashboard/packages", icon: Package },
   { titleKey: "dashboard.mobile.bookings", url: "/dashboard/bookings", icon: CalendarCheck },
+  { titleKey: "dashboard.mobile.visaTickets", url: "/dashboard/visa-tickets", icon: ShieldCheck },
   { titleKey: "dashboard.mobile.profile", url: "/dashboard/profile", icon: User },
 ];
 

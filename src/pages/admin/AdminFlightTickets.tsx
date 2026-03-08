@@ -187,6 +187,13 @@ const AdminFlightTickets = () => {
                       </div>
                     </TableCell>
                     <TableCell>{b.departure_city || "—"}</TableCell>
+                    <TableCell className="text-xs">
+                      {b.agent_id ? (
+                        <Badge variant="outline" className="text-xs">{(b as any).agents?.business_name || "Agent"}</Badge>
+                      ) : (
+                        <span className="text-muted-foreground">Direct</span>
+                      )}
+                    </TableCell>
                     <TableCell className="text-sm">{b.flight_provider || "—"}</TableCell>
                     <TableCell>
                       <Badge className={ticketStatusColors[b.ticket_status] || "bg-muted"}>{b.ticket_status}</Badge>

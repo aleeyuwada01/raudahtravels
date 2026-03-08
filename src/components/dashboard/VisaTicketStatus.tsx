@@ -48,8 +48,13 @@ const VisaTicketStatus = () => {
 
   return (
     <Card className="border-border">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="font-heading text-lg">Visa & Flight Ticket Status</CardTitle>
+        <Button variant="ghost" size="sm" asChild>
+          <Link to="/dashboard/visa-tickets" className="flex items-center gap-1 text-xs">
+            View All <ArrowRight className="h-3 w-3" />
+          </Link>
+        </Button>
       </CardHeader>
       <CardContent className="space-y-4">
         {bookings.map((booking: any) => (

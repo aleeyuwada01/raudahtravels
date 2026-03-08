@@ -107,6 +107,7 @@ const App = () => (
                   <Route path="documents" element={<DashboardDocuments />} />
                   <Route path="profile" element={<DashboardProfile />} />
                   <Route path="support" element={<DashboardSupport />} />
+                  <Route path="visa-tickets" element={<DashboardVisaTickets />} />
                   <Route path="book/:id" element={<BookingWizard />} />
                 </Route>
                 <Route

@@ -32,6 +32,7 @@ const menuItems = [
   { titleKey: "dashboard.nav.packages", url: "/dashboard/packages", icon: Package },
   { titleKey: "dashboard.nav.payments", url: "/dashboard/payments", icon: CreditCard },
   { titleKey: "dashboard.nav.documents", url: "/dashboard/documents", icon: FileText },
+  { titleKey: "dashboard.nav.visaTickets", url: "/dashboard/visa-tickets", icon: ShieldCheck },
   { titleKey: "dashboard.nav.profile", url: "/dashboard/profile", icon: User },
   { titleKey: "dashboard.nav.support", url: "/dashboard/support", icon: HelpCircle },
 ];
