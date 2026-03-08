@@ -296,7 +296,7 @@ const AdminOverview = () => {
               {quickActions.map((a) => (
                 <Link key={a.label} to={a.href}>
                   <div className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer text-center">
-                    <div className={`p-2.5 rounded-lg ${a.color}`}>
+                    <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
                       <a.icon className="h-5 w-5" />
                     </div>
                     <span className="text-xs font-medium text-foreground">{a.label}</span>
