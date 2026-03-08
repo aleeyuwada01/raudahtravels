@@ -129,6 +129,9 @@ const DashboardOverview = () => {
         ))}
       </div>
 
+      {/* Visa & Ticket Status */}
+      <VisaTicketStatus />
+
       {/* Quick Actions */}
       <Card className="border-border">
         <CardContent className="p-5 md:p-6">
