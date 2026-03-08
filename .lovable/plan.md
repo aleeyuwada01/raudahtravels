@@ -1,52 +1,44 @@
 
 
-# Add Katsina Quotation Template + Fix First-Page Whitespace
+# Admin UI Redesign — Flat Design with Updated Colors
 
-## Changes
+## What Changes
 
-### 1. Add Katsina Documentary Template (`src/data/proposalTemplates.ts`)
+### 1. Color System Update (`src/index.css`)
+- Replace primary emerald `hsl(162, 90%, 17%)` with the requested green `rgba(73, 186, 106)` → `hsl(139, 46%, 51%)`
+- Remove gold/yellow/orange from secondary, accent, and border tokens — replace with neutral grays
+- Admin sidebar background: slightly darker than body (e.g. `hsl(0, 0%, 94%)` vs body `hsl(0, 0%, 97%)`)
 
-Add a new `katsinaTemplate: ProposalData` export with:
-- **proposalTitle**: "Comprehensive Quotation\nFor Documentary Production"
-- **clientName**: "Katsina State Government"
-- **clientTitle**: "Client:"
-- **clientLocation**: "Katsina State"
-- **date**: "2026"
-- **No coverLetter** (simple quotation format)
-- **executiveSummary**: Project description — Documentary on Government Intervention on Nutrition, 10–15 minutes
-- **problems**: Scope of Work items (concept development, scriptwriting, pre-production, field production, videography, drone, interviews, voice-over, post-production, motion graphics, music, final delivery)
-- **featurePages**: Empty array (no feature pages needed for this simple quotation)
-- **pricingTables**: Single table with the 4 cost rows:
-  - Pre-Production: ₦500,000
-  - Production: ₦1,200,000
-  - Post-Production: ₦500,000
-  - Publicizing & Media Distribution: ₦1,000,000
-- **grandTotal**: Two options shown — ₦3,200,000 (with publicizing) / ₦2,200,000 (without)
-- **timeline**: Single entry — "2–3 Weeks from date of initial payment"
-- **Payment terms** in appendixSections: "70% advance, 30% upon completion"
-- **Validity**: "30 Days from date of issuance"
-- **mouParties/mouClauses/mouSignatories**: Standard FADAK terms adapted for Katsina
+### 2. Admin Sidebar (`src/components/admin/AdminSidebar.tsx`)
+- Remove `border-r` from sidebar
+- Darken sidebar bg to `hsl(0, 0%, 93%)` (subtle contrast vs white content area)
 
-Add to `templateList` array before "custom":
-```ts
-{ id: "katsina", name: "Katsina Documentary Quotation", data: katsinaTemplate },
+### 3. Admin Dashboard Redesign (`src/pages/admin/AdminOverview.tsx`)
+- Match reference: large stat values (text-4xl/5xl bold), small label above, percentage badge with up/down arrow
+- Reduce stat cards from 6 to 4 main ones (like reference: Pilgrims, Revenue, Bookings, Agents)
+- Flat card design: no heavy borders, subtle rounded cards with white bg, minimal shadows
+- Keep charts and recent activity sections but with updated color palette
+
+### 4. Global Card & Button Style Updates
+- Update button primary color to the new green across all admin pages
+- Cards: cleaner flat look — lighter borders, more padding, bigger typography for key values
+- Badge colors: use the new green for success states, neutral gray for pending, red for destructive
+
+### Files to Edit
+- `src/index.css` — update CSS custom properties (primary, secondary, accent, border, sidebar vars)
+- `src/components/admin/AdminSidebar.tsx` — remove border-r, update bg
+- `src/pages/admin/AdminOverview.tsx` — redesign stat cards with bigger values, flat aesthetic, new colors
+- `src/components/ui/card.tsx` — no changes needed (styling via CSS vars)
+
+### Color Mapping
+```text
+OLD                          → NEW
+primary: hsl(162,90%,17%)    → hsl(139,46%,51%)  [rgba(73,186,106)]
+secondary: hsl(43,56%,52%)   → hsl(0,0%,40%)     [neutral gray]
+accent: hsl(43,56%,52%)      → hsl(139,46%,51%)  [same green]
+border: hsl(43,30%,80%)      → hsl(0,0%,88%)     [neutral border]
+sidebar-bg: hsl(162,90%,12%) → hsl(0,0%,93%)     [light gray, darker than body]
 ```
 
-### 2. Fix First-Page Whitespace in PDF (`src/pages/Proposal.tsx`)
-
-**Root cause**: The `CoverPage` component renders two separate `.proposal-page` divs — one for letterhead/cover letter and one for the title block (forced to page 2 via `data-pdf-new-page`). For templates without a cover letter (like Raudah and the new Katsina template), this creates an empty/sparse first page.
-
-**Fix**: Restructure `CoverPage` to render as a **single page** when there is no `coverLetter`. The title block content should appear on page 1, directly after the letterhead.
-
-- **When `data.coverLetter` exists**: Keep the current two-page layout (letterhead + letter on page 1, title on page 2)
-- **When no `coverLetter`**: Render everything in a single `.proposal-page` div with one `data-pdf-section` — letterhead at top, then title block, client info, and date — no `data-pdf-new-page` attribute
-
-This ensures content starts on page 1 for simple quotation templates.
-
-### Files to Modify
-
-| File | Change |
-|------|--------|
-| `src/data/proposalTemplates.ts` | Add `katsinaTemplate` export and add to `templateList` |
-| `src/pages/Proposal.tsx` | Restructure `CoverPage` to conditionally render single-page or two-page layout based on presence of `coverLetter` |
+All admin pages inherit from CSS variables, so color changes propagate automatically. The Overview page gets a structural redesign for the stat cards to match the reference's large-number flat style.
 
