@@ -135,6 +135,7 @@ const App = () => (
                   <Route path="team-chat" element={<AdminTeamChat />} />
                   <Route path="booking-form" element={<AdminBookingForm />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="agent-wallets" element={<AdminWalletManagement />} />
                 </Route>
                 <Route
                   path="/agent"
