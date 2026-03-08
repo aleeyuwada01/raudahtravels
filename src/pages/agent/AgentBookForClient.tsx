@@ -206,6 +206,22 @@ const AgentBookForClient = () => {
                 </div>
               </div>
 
+              {/* Wallet Balance Info */}
+              {wallet && (
+                <div className={`flex items-center gap-3 p-3 rounded-lg border ${hasInsufficientBalance ? "border-destructive/50 bg-destructive/5" : "border-primary/30 bg-primary/5"}`}>
+                  <Wallet className={`h-5 w-5 ${hasInsufficientBalance ? "text-destructive" : "text-primary"}`} />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Wallet Balance: <strong>₦{walletBalance.toLocaleString()}</strong></p>
+                    {hasInsufficientBalance && (
+                      <p className="text-xs text-destructive flex items-center gap-1 mt-0.5">
+                        <AlertTriangle className="h-3 w-3" />
+                        Insufficient balance. You need ₦{wholesalePrice.toLocaleString()} to book.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {clients.length === 0 ? (
                 <Alert>
                   <AlertDescription>
