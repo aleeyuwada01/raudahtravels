@@ -4,7 +4,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileCheck, Plane, Download, MessageSquare } from "lucide-react";
+import { FileCheck, Plane, Download, MessageSquare, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const statusColors: Record<string, string> = {
   pending: "bg-secondary/10 text-secondary",
