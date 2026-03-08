@@ -30,6 +30,7 @@ const menuItems = [
   { title: "Packages", url: "/agent/packages", icon: Package },
   { title: "Bookings", url: "/agent/bookings", icon: CreditCard },
   { title: "Visa & Tickets", url: "/agent/visa-tickets", icon: FileCheck },
+  { title: "Wallet", url: "/agent/wallet", icon: Wallet },
   { title: "Commissions", url: "/agent/commissions", icon: PiggyBank },
 ];
 
