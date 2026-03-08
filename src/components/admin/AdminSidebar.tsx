@@ -192,7 +192,7 @@ const AdminSidebar = () => {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="border-t border-[hsl(0,0%,90%)] p-4">
+      <SidebarFooter className="border-t border-sidebar-border p-4">
         <div className="flex items-center gap-3 mb-2">
           <Avatar className="h-9 w-9 border border-[hsl(0,0%,85%)]">
             <AvatarImage src={profile?.avatar_url || undefined} />
