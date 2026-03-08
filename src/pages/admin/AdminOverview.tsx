@@ -164,50 +164,52 @@ const AdminOverview = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-body text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Overview of your Hajj & Umrah operations</p>
+        <h1 className="font-body text-3xl md:text-4xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-base text-muted-foreground mt-1">Overview of your Hajj & Umrah operations</p>
       </div>
 
-      {/* Stat Cards — 4 big cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {statCards.map((c) => (
-          <Card key={c.label} className="border-border/50 shadow-none">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-sm font-medium text-muted-foreground">{c.label}</p>
-                <div className="p-2.5 rounded-xl bg-primary/10">
-                  <c.icon className="h-5 w-5 text-primary" />
+      {/* Stat Cards — 2 large cards like reference */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-foreground">Overview</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+          {statCards.map((c) => (
+            <Card key={c.label} className="border border-border rounded-2xl shadow-none">
+              <CardContent className="p-7">
+                <div className="flex items-center gap-2 mb-1">
+                  <c.icon className="h-5 w-5 text-muted-foreground" />
+                  <p className="text-base font-medium text-muted-foreground">{c.label}</p>
                 </div>
-              </div>
-              <p className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">{c.value}</p>
-              {c.trend && (
-                <div className="flex items-center gap-1.5 mt-3">
-                  {c.up ? (
-                    <ArrowUpRight className="h-4 w-4 text-primary" />
-                  ) : (
-                    <ArrowDownRight className="h-4 w-4 text-destructive" />
-                  )}
-                  <span className={`text-sm font-medium ${c.up ? "text-primary" : "text-destructive"}`}>{c.trend}</span>
-                  <span className="text-sm text-muted-foreground">vs last month</span>
+                <div className="flex items-end gap-3 mt-3">
+                  <p className="text-5xl md:text-6xl font-bold text-foreground tracking-tight leading-none">{c.value}</p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+                {c.trend && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <span className={`inline-flex items-center gap-1 text-sm font-semibold px-2.5 py-1 rounded-full ${c.up ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
+                      {c.up ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+                      {c.trend}
+                    </span>
+                    <span className="text-sm text-muted-foreground">vs last month</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Revenue Trend */}
-        <Card className="lg:col-span-2 border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Revenue Trend</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Card className="lg:col-span-2 border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Revenue Trend</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ChartContainer config={{ revenue: { label: "Revenue", color: "hsl(var(--primary))" } }} className="h-[200px] w-full">
+          <CardContent className="px-7 pb-7">
+            <ChartContainer config={{ revenue: { label: "Revenue", color: "hsl(var(--primary))" } }} className="h-[220px] w-full">
               <AreaChart data={revenueTrend}>
                 <defs>
                   <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
@@ -215,8 +217,8 @@ const AdminOverview = () => {
                     <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={11} />
-                <YAxis tickLine={false} axisLine={false} fontSize={11} tickFormatter={(v) => `₦${(v / 1000000).toFixed(0)}M`} />
+                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={13} />
+                <YAxis tickLine={false} axisLine={false} fontSize={13} tickFormatter={(v) => `₦${(v / 1000000).toFixed(0)}M`} />
                 <ChartTooltip content={<ChartTooltipContent formatter={(value) => formatPrice(Number(value))} />} />
                 <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fill="url(#revenueGrad)" strokeWidth={2} />
               </AreaChart>
@@ -224,16 +226,15 @@ const AdminOverview = () => {
           </CardContent>
         </Card>
 
-        {/* Booking Status Donut */}
-        <Card className="border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Booking Status</CardTitle>
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Booking Status</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col items-center">
-            <div className="h-[160px] w-full">
+          <CardContent className="flex flex-col items-center px-7 pb-7">
+            <div className="h-[170px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={bookingBreakdown} dataKey="count" nameKey="status" cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={3}>
+                  <Pie data={bookingBreakdown} dataKey="count" nameKey="status" cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3}>
                     {bookingBreakdown.map((entry) => (
                       <Cell key={entry.status} fill={statusColors[entry.status] || "hsl(var(--muted))"} />
                     ))}
@@ -242,12 +243,12 @@ const AdminOverview = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex flex-wrap gap-3 mt-2 justify-center">
+            <div className="flex flex-wrap gap-4 mt-3 justify-center">
               {bookingBreakdown.map((entry) => (
-                <div key={entry.status} className="flex items-center gap-1.5 text-xs">
-                  <span className="h-2 w-2 rounded-full" style={{ background: statusColors[entry.status] }} />
+                <div key={entry.status} className="flex items-center gap-2 text-sm">
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: statusColors[entry.status] }} />
                   <span className="capitalize text-muted-foreground">{entry.status}</span>
-                  <span className="font-medium text-foreground">{entry.count}</span>
+                  <span className="font-semibold text-foreground">{entry.count}</span>
                 </div>
               ))}
             </div>
@@ -256,16 +257,16 @@ const AdminOverview = () => {
       </div>
 
       {/* Package Split + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Package Types</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Package Types</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col items-center">
-            <div className="h-[140px] w-full">
+          <CardContent className="flex flex-col items-center px-7 pb-7">
+            <div className="h-[150px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={packageSplit} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={55} paddingAngle={4}>
+                  <Pie data={packageSplit} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={60} paddingAngle={4}>
                     {packageSplit.map((_, i) => (
                       <Cell key={i} fill={pieColors[i % pieColors.length]} />
                     ))}
@@ -274,32 +275,31 @@ const AdminOverview = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex gap-4 mt-2">
+            <div className="flex gap-5 mt-3">
               {packageSplit.map((entry, i) => (
-                <div key={entry.type} className="flex items-center gap-1.5 text-xs">
-                  <span className="h-2 w-2 rounded-full" style={{ background: pieColors[i % pieColors.length] }} />
+                <div key={entry.type} className="flex items-center gap-2 text-sm">
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: pieColors[i % pieColors.length] }} />
                   <span className="text-muted-foreground">{entry.type}</span>
-                  <span className="font-medium text-foreground">{entry.count}</span>
+                  <span className="font-semibold text-foreground">{entry.count}</span>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
-        <Card className="lg:col-span-2 border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-heading">Quick Actions</CardTitle>
+        <Card className="lg:col-span-2 border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-2 px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <CardContent className="px-7 pb-7">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {quickActions.map((a) => (
                 <Link key={a.label} to={a.href}>
-                  <div className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer text-center">
-                    <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
-                      <a.icon className="h-5 w-5" />
+                  <div className="flex flex-col items-center gap-3 p-5 rounded-xl border border-border hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer text-center">
+                    <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                      <a.icon className="h-6 w-6" />
                     </div>
-                    <span className="text-xs font-medium text-foreground">{a.label}</span>
+                    <span className="text-sm font-medium text-foreground">{a.label}</span>
                   </div>
                 </Link>
               ))}
@@ -309,27 +309,26 @@ const AdminOverview = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Recent Bookings */}
-        <Card className="border-border">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-heading">Recent Bookings</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-3 flex flex-row items-center justify-between px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Recent Bookings</CardTitle>
             <Link to="/admin/pilgrims">
-              <Button variant="ghost" size="sm" className="text-xs">View All</Button>
+              <Button variant="ghost" size="sm" className="text-sm">View All</Button>
             </Link>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-7 pb-7">
             {recentBookings.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-4 text-center">No bookings yet</p>
+              <p className="text-base text-muted-foreground py-6 text-center">No bookings yet</p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {recentBookings.map((b) => (
-                  <div key={b.id} className="flex items-center justify-between gap-2 text-sm">
+                  <div key={b.id} className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-foreground truncate">{b.full_name}</p>
-                      <p className="text-xs text-muted-foreground">{b.reference || b.id.slice(0, 8)}</p>
+                      <p className="text-base font-medium text-foreground truncate">{b.full_name}</p>
+                      <p className="text-sm text-muted-foreground">{b.reference || b.id.slice(0, 8)}</p>
                     </div>
-                    <Badge variant={statusBadgeVariant(b.status)} className="text-[10px] capitalize shrink-0">
+                    <Badge variant={statusBadgeVariant(b.status)} className="text-xs capitalize shrink-0">
                       {b.status}
                     </Badge>
                   </div>
@@ -339,32 +338,31 @@ const AdminOverview = () => {
           </CardContent>
         </Card>
 
-        {/* Recent Payments */}
-        <Card className="border-border">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-heading">Recent Payments</CardTitle>
+        <Card className="border border-border rounded-2xl shadow-none">
+          <CardHeader className="pb-3 flex flex-row items-center justify-between px-7 pt-7">
+            <CardTitle className="text-lg font-semibold font-body">Recent Payments</CardTitle>
             <Link to="/admin/payments">
-              <Button variant="ghost" size="sm" className="text-xs">View All</Button>
+              <Button variant="ghost" size="sm" className="text-sm">View All</Button>
             </Link>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-7 pb-7">
             {recentPayments.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-4 text-center">No payments yet</p>
+              <p className="text-base text-muted-foreground py-6 text-center">No payments yet</p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {recentPayments.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between gap-2 text-sm">
+                  <div key={p.id} className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-foreground">{formatPrice(p.amount)}</p>
-                      <p className="text-xs text-muted-foreground capitalize">{p.method.replace("_", " ")}</p>
+                      <p className="text-base font-medium text-foreground">{formatPrice(p.amount)}</p>
+                      <p className="text-sm text-muted-foreground capitalize">{p.method.replace("_", " ")}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <Badge variant={statusBadgeVariant(p.status)} className="text-[10px] capitalize">
+                      <Badge variant={statusBadgeVariant(p.status)} className="text-xs capitalize">
                         {p.status}
                       </Badge>
                       {p.status === "pending" && (
                         <Link to="/admin/payments">
-                          <ShieldCheck className="h-4 w-4 text-primary cursor-pointer" />
+                          <ShieldCheck className="h-5 w-5 text-primary cursor-pointer" />
                         </Link>
                       )}
                     </div>

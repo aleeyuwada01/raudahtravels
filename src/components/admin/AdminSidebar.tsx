@@ -101,9 +101,9 @@ const CollapsibleGroup = ({
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
-      <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-3 rounded-xl text-[16px] font-medium text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors cursor-pointer">
-        <span className="flex items-center gap-3.5">
-          <group.icon className="h-6 w-6 shrink-0 text-[hsl(0,0%,45%)]" />
+      <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-3 rounded-xl text-[17px] font-medium text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors cursor-pointer">
+        <span className="flex items-center gap-4">
+          <group.icon className="h-[22px] w-[22px] shrink-0 text-[hsl(0,0%,45%)]" />
           <span>{group.label}</span>
         </span>
         <ChevronDown className={cn(
@@ -123,7 +123,7 @@ const CollapsibleGroup = ({
                 <NavLink
                   to={item.url}
                   end={false}
-                  className="flex items-center w-full ml-6 px-3 py-2.5 rounded-lg text-[15px] text-[hsl(0,0%,45%)] hover:bg-[hsl(0,0%,94%)] hover:text-[hsl(0,0%,15%)] transition-colors"
+                  className="flex items-center w-full ml-6 px-3 py-2.5 rounded-lg text-[16px] text-[hsl(0,0%,45%)] hover:bg-[hsl(0,0%,94%)] hover:text-[hsl(0,0%,15%)] transition-colors"
                   activeClassName="bg-[hsl(40,30%,95%)] text-[hsl(0,0%,10%)] font-semibold shadow-sm"
                 >
                   <span>{item.title}</span>
@@ -168,10 +168,10 @@ const AdminSidebar = () => {
                 key={item.url}
                 to={item.url}
                 end={item.url === "/admin"}
-                className="flex items-center gap-3.5 px-3 py-3 rounded-xl text-[16px] text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors"
+                className="flex items-center gap-4 px-3 py-3 rounded-xl text-[17px] text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,94%)] transition-colors"
                 activeClassName="bg-[hsl(40,30%,95%)] text-[hsl(0,0%,10%)] font-semibold shadow-sm"
               >
-                <item.icon className="h-6 w-6 shrink-0 text-[hsl(0,0%,45%)]" />
+                <item.icon className="h-[22px] w-[22px] shrink-0 text-[hsl(0,0%,45%)]" />
                 <span>{item.title}</span>
               </NavLink>
             ))}

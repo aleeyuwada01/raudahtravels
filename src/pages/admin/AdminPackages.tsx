@@ -127,13 +127,13 @@ const AdminPackages = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Package Management</h1>
-          <p className="text-sm text-muted-foreground mt-1">Create and manage travel packages</p>
+          <h1 className="font-body text-3xl font-bold text-foreground">Package Management</h1>
+          <p className="text-base text-muted-foreground mt-1">Create and manage travel packages</p>
         </div>
         <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) { setEditingId(null); setForm(emptyForm); } }}>
           <DialogTrigger asChild>
-            <Button className="gold-gradient text-secondary-foreground font-semibold">
-              <Plus className="h-4 w-4 mr-2" />
+            <Button>
+              <Plus className="h-5 w-5 mr-2" />
               New Package
             </Button>
           </DialogTrigger>
@@ -248,7 +248,7 @@ const AdminPackages = () => {
                   <Input type="number" value={form.minimum_deposit || 0} onChange={(e) => setForm({ ...form, minimum_deposit: Number(e.target.value) })} />
                 </div>
               </div>
-              <Button onClick={handleSave} disabled={upsert.isPending} className="gold-gradient text-secondary-foreground font-semibold">
+              <Button onClick={handleSave} disabled={upsert.isPending}>
                 {upsert.isPending ? "Saving..." : editingId ? "Update Package" : "Create Package"}
               </Button>
             </div>
