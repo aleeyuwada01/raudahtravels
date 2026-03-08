@@ -10,6 +10,7 @@ import {
   User,
   HelpCircle,
   LogOut,
+  ShieldCheck,
 } from "lucide-react";
 import {
   Sidebar,
