@@ -57,6 +57,8 @@ const AgentPackages = lazyWithRetry(() => import("./pages/agent/AgentPackages"))
 const AgentBookings = lazyWithRetry(() => import("./pages/agent/AgentBookings"));
 const AgentCommissions = lazyWithRetry(() => import("./pages/agent/AgentCommissions"));
 const AgentVisaTickets = lazyWithRetry(() => import("./pages/agent/AgentVisaTickets"));
+const AgentWallet = lazyWithRetry(() => import("./pages/agent/AgentWallet"));
+const AdminWalletManagement = lazyWithRetry(() => import("./pages/admin/AdminWalletManagement"));
 const Proposal = lazyWithRetry(() => import("./pages/Proposal"));
 const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
 
@@ -133,6 +135,7 @@ const App = () => (
                   <Route path="team-chat" element={<AdminTeamChat />} />
                   <Route path="booking-form" element={<AdminBookingForm />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="agent-wallets" element={<AdminWalletManagement />} />
                 </Route>
                 <Route
                   path="/agent"
@@ -149,6 +152,7 @@ const App = () => (
                   <Route path="bookings" element={<AgentBookings />} />
                   <Route path="commissions" element={<AgentCommissions />} />
                   <Route path="visa-tickets" element={<AgentVisaTickets />} />
+                  <Route path="wallet" element={<AgentWallet />} />
                 </Route>
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

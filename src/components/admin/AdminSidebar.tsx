@@ -54,6 +54,7 @@ const documentMenuItems = [
 const agentMenuItems = [
   { title: "Agents", url: "/admin/agents", icon: UserCog },
   { title: "Agent Applications", url: "/admin/agent-applications", icon: UserPlus },
+  { title: "Agent Wallets", url: "/admin/agent-wallets", icon: Landmark },
 ];
 
 const operationsMenuItems = [

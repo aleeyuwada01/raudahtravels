@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle, Percent } from "lucide-react";
+import { ArrowLeft, CheckCircle, Percent, Wallet, AlertTriangle } from "lucide-react";
 
 const AgentBookForClient = () => {
   const { id: packageId } = useParams<{ id: string }>();
@@ -61,12 +61,29 @@ const AgentBookForClient = () => {
     enabled: !!agent?.id,
   });
 
+  // Fetch wallet balance
+  const { data: wallet } = useQuery({
+    queryKey: ["agent-wallet-booking", agent?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("agent_wallets")
+        .select("id, balance")
+        .eq("agent_id", agent!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!agent?.id,
+  });
+
   if (pkgLoading) return <div className="p-8"><Skeleton className="h-96" /></div>;
   if (!pkg) return <div className="text-center py-12">Package not found</div>;
 
   const selectedClient = clients.find((c: any) => c.id === selectedClientId);
   const wholesalePrice = pkg.price - (pkg.price * (agent?.commission_rate || pkg.agent_discount) / 100);
   const savings = pkg.price - wholesalePrice;
+  const walletBalance = Number(wallet?.balance || 0);
+  const hasInsufficientBalance = walletBalance < wholesalePrice;
 
   const roomTypes = [
     ...(pkg.package_accommodations?.flatMap((a: any) => a.room_types || []) || []),
@@ -74,6 +91,12 @@ const AgentBookForClient = () => {
 
   const handleSubmit = async () => {
     if (!user || !agent || !selectedClient || !selectedDateId) return;
+
+    // Check wallet balance
+    if (wallet && hasInsufficientBalance) {
+      toast.error(`Insufficient wallet balance. You need ₦${wholesalePrice.toLocaleString()} but have ₦${walletBalance.toLocaleString()}`);
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -96,20 +119,48 @@ const AgentBookForClient = () => {
           emergency_contact_name: emergencyName,
           emergency_contact_phone: emergencyPhone,
           emergency_contact_relationship: emergencyRelation,
-          status: "pending",
+          status: wallet ? "confirmed" : "pending",
         })
         .select()
         .single();
 
       if (bookingError) throw bookingError;
 
-      // Create payment record at wholesale price
-      await supabase.from("payments").insert({
-        booking_id: bookingData.id,
-        amount: wholesalePrice,
-        method: "bank_transfer",
-        status: "pending",
-      });
+      // Deduct from wallet if wallet exists
+      if (wallet) {
+        const newBalance = walletBalance - wholesalePrice;
+        await supabase
+          .from("agent_wallets")
+          .update({ balance: newBalance })
+          .eq("id", wallet.id);
+
+        // Record debit transaction
+        await supabase.from("wallet_transactions").insert({
+          wallet_id: wallet.id,
+          amount: wholesalePrice,
+          type: "debit",
+          description: `Booking for ${selectedClient.full_name} — ${pkg.name}`,
+          reference: bookingData.reference || bookingData.id.slice(0, 8),
+          created_by: user.id,
+        });
+
+        // Create verified payment record
+        await supabase.from("payments").insert({
+          booking_id: bookingData.id,
+          amount: wholesalePrice,
+          method: "bank_transfer",
+          status: "verified",
+          notes: "Paid via agent wallet",
+        });
+      } else {
+        // No wallet — create pending payment
+        await supabase.from("payments").insert({
+          booking_id: bookingData.id,
+          amount: wholesalePrice,
+          method: "bank_transfer",
+          status: "pending",
+        });
+      }
 
       setBookingRef(bookingData.reference || bookingData.id.slice(0, 8));
       setStep(4);
@@ -154,6 +205,22 @@ const AgentBookForClient = () => {
                   You save ₦{savings.toLocaleString()}
                 </div>
               </div>
+
+              {/* Wallet Balance Info */}
+              {wallet && (
+                <div className={`flex items-center gap-3 p-3 rounded-lg border ${hasInsufficientBalance ? "border-destructive/50 bg-destructive/5" : "border-primary/30 bg-primary/5"}`}>
+                  <Wallet className={`h-5 w-5 ${hasInsufficientBalance ? "text-destructive" : "text-primary"}`} />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Wallet Balance: <strong>₦{walletBalance.toLocaleString()}</strong></p>
+                    {hasInsufficientBalance && (
+                      <p className="text-xs text-destructive flex items-center gap-1 mt-0.5">
+                        <AlertTriangle className="h-3 w-3" />
+                        Insufficient balance. You need ₦{wholesalePrice.toLocaleString()} to book.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {clients.length === 0 ? (
                 <Alert>
