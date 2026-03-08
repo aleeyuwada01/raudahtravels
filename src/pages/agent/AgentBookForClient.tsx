@@ -92,6 +92,12 @@ const AgentBookForClient = () => {
   const handleSubmit = async () => {
     if (!user || !agent || !selectedClient || !selectedDateId) return;
 
+    // Check wallet balance
+    if (wallet && hasInsufficientBalance) {
+      toast.error(`Insufficient wallet balance. You need ₦${wholesalePrice.toLocaleString()} but have ₦${walletBalance.toLocaleString()}`);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const { data: bookingData, error: bookingError } = await supabase
@@ -113,20 +119,48 @@ const AgentBookForClient = () => {
           emergency_contact_name: emergencyName,
           emergency_contact_phone: emergencyPhone,
           emergency_contact_relationship: emergencyRelation,
-          status: "pending",
+          status: wallet ? "confirmed" : "pending",
         })
         .select()
         .single();
 
       if (bookingError) throw bookingError;
 
-      // Create payment record at wholesale price
-      await supabase.from("payments").insert({
-        booking_id: bookingData.id,
-        amount: wholesalePrice,
-        method: "bank_transfer",
-        status: "pending",
-      });
+      // Deduct from wallet if wallet exists
+      if (wallet) {
+        const newBalance = walletBalance - wholesalePrice;
+        await supabase
+          .from("agent_wallets")
+          .update({ balance: newBalance })
+          .eq("id", wallet.id);
+
+        // Record debit transaction
+        await supabase.from("wallet_transactions").insert({
+          wallet_id: wallet.id,
+          amount: wholesalePrice,
+          type: "debit",
+          description: `Booking for ${selectedClient.full_name} — ${pkg.name}`,
+          reference: bookingData.reference || bookingData.id.slice(0, 8),
+          created_by: user.id,
+        });
+
+        // Create verified payment record
+        await supabase.from("payments").insert({
+          booking_id: bookingData.id,
+          amount: wholesalePrice,
+          method: "bank_transfer",
+          status: "verified",
+          notes: "Paid via agent wallet",
+        });
+      } else {
+        // No wallet — create pending payment
+        await supabase.from("payments").insert({
+          booking_id: bookingData.id,
+          amount: wholesalePrice,
+          method: "bank_transfer",
+          status: "pending",
+        });
+      }
 
       setBookingRef(bookingData.reference || bookingData.id.slice(0, 8));
       setStep(4);
