@@ -149,7 +149,7 @@ const AdminSidebar = () => {
   const visibleFlat = flatItems.filter((i) => !i.permission || hasPermission(i.permission));
 
   return (
-    <Sidebar className="border-r border-[hsl(0,0%,90%)] bg-[hsl(0,0%,97%)]" style={{ ["--sidebar-background" as string]: "0 0% 97%", ["--sidebar-foreground" as string]: "0 0% 15%" }}>
+    <Sidebar className="bg-sidebar" style={{ ["--sidebar-background" as string]: "0 0% 93%", ["--sidebar-foreground" as string]: "0 0% 15%" }}>
       {/* Brand */}
       <div className="px-5 pt-6 pb-5">
         <div className="flex items-center gap-3">
