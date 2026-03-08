@@ -164,39 +164,41 @@ const AdminOverview = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-body text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Overview of your Hajj & Umrah operations</p>
+        <h1 className="font-body text-3xl md:text-4xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-base text-muted-foreground mt-1">Overview of your Hajj & Umrah operations</p>
       </div>
 
-      {/* Stat Cards — 4 big cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {statCards.map((c) => (
-          <Card key={c.label} className="border-border/50 shadow-none">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-sm font-medium text-muted-foreground">{c.label}</p>
-                <div className="p-2.5 rounded-xl bg-primary/10">
-                  <c.icon className="h-5 w-5 text-primary" />
+      {/* Stat Cards — 2 large cards like reference */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-foreground">Overview</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+          {statCards.map((c) => (
+            <Card key={c.label} className="border border-border rounded-2xl shadow-none">
+              <CardContent className="p-7">
+                <div className="flex items-center gap-2 mb-1">
+                  <c.icon className="h-5 w-5 text-muted-foreground" />
+                  <p className="text-base font-medium text-muted-foreground">{c.label}</p>
                 </div>
-              </div>
-              <p className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">{c.value}</p>
-              {c.trend && (
-                <div className="flex items-center gap-1.5 mt-3">
-                  {c.up ? (
-                    <ArrowUpRight className="h-4 w-4 text-primary" />
-                  ) : (
-                    <ArrowDownRight className="h-4 w-4 text-destructive" />
-                  )}
-                  <span className={`text-sm font-medium ${c.up ? "text-primary" : "text-destructive"}`}>{c.trend}</span>
-                  <span className="text-sm text-muted-foreground">vs last month</span>
+                <div className="flex items-end gap-3 mt-3">
+                  <p className="text-5xl md:text-6xl font-bold text-foreground tracking-tight leading-none">{c.value}</p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+                {c.trend && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <span className={`inline-flex items-center gap-1 text-sm font-semibold px-2.5 py-1 rounded-full ${c.up ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
+                      {c.up ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+                      {c.trend}
+                    </span>
+                    <span className="text-sm text-muted-foreground">vs last month</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
       </div>
 
       {/* Charts Row */}
