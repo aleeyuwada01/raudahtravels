@@ -155,9 +155,9 @@ const AdminPilgrims = () => {
                 })}
                 {filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                      <Users className="h-8 w-8 mx-auto mb-2 opacity-30" />
-                      No pilgrims found
+                    <TableCell colSpan={10} className="text-center py-10 text-muted-foreground">
+                      <Users className="h-10 w-10 mx-auto mb-3 opacity-30" />
+                      <p className="text-base">No pilgrims found</p>
                     </TableCell>
                   </TableRow>
                 )}
