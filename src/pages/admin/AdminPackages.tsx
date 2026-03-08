@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Archive, Eye } from "lucide-react";
+import { Plus, Edit, Archive, Eye, Trash2 } from "lucide-react";
 import { formatPrice } from "@/data/packages";
 import { toast } from "@/hooks/use-toast";
 import type { Database } from "@/integrations/supabase/types";
