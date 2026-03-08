@@ -1,92 +1,52 @@
 
 
-# Master Rebuild Plan — Raudah Travels & Tours
+# Add Katsina Quotation Template + Fix First-Page Whitespace
 
-This is a very large scope covering 20+ new features across all three portals. To avoid regressions and maintain quality, the work must be broken into sequential phases. Each phase builds on the previous one.
+## Changes
 
-## Current State vs. Requested
+### 1. Add Katsina Documentary Template (`src/data/proposalTemplates.ts`)
 
-**Already exists (8 admin, 6 agent, 8 customer pages):**
-- Customer: Landing, Booking Wizard, Documents, Payments, Bookings, Profile, Support, Packages
-- Agent: Overview, Clients, Packages, Book for Client, Bookings, Commissions
-- Admin: Overview, Packages, Payments, Pilgrims, Analytics, ID Tags, Agent Applications, AI Assistant
+Add a new `katsinaTemplate: ProposalData` export with:
+- **proposalTitle**: "Comprehensive Quotation\nFor Documentary Production"
+- **clientName**: "Katsina State Government"
+- **clientTitle**: "Client:"
+- **clientLocation**: "Katsina State"
+- **date**: "2026"
+- **No coverLetter** (simple quotation format)
+- **executiveSummary**: Project description — Documentary on Government Intervention on Nutrition, 10–15 minutes
+- **problems**: Scope of Work items (concept development, scriptwriting, pre-production, field production, videography, drone, interviews, voice-over, post-production, motion graphics, music, final delivery)
+- **featurePages**: Empty array (no feature pages needed for this simple quotation)
+- **pricingTables**: Single table with the 4 cost rows:
+  - Pre-Production: ₦500,000
+  - Production: ₦1,200,000
+  - Post-Production: ₦500,000
+  - Publicizing & Media Distribution: ₦1,000,000
+- **grandTotal**: Two options shown — ₦3,200,000 (with publicizing) / ₦2,200,000 (without)
+- **timeline**: Single entry — "2–3 Weeks from date of initial payment"
+- **Payment terms** in appendixSections: "70% advance, 30% upon completion"
+- **Validity**: "30 Days from date of issuance"
+- **mouParties/mouClauses/mouSignatories**: Standard FADAK terms adapted for Katsina
 
-**New features needed (~15 new pages + 8+ DB tables + 5+ edge functions):**
+Add to `templateList` array before "custom":
+```ts
+{ id: "katsina", name: "Katsina Documentary Quotation", data: katsinaTemplate },
+```
 
-## Phased Delivery
+### 2. Fix First-Page Whitespace in PDF (`src/pages/Proposal.tsx`)
 
-### Phase 1 — Database Foundation & Admin Sidebar Expansion
-*New tables and admin navigation scaffolding*
+**Root cause**: The `CoverPage` component renders two separate `.proposal-page` divs — one for letterhead/cover letter and one for the title block (forced to page 2 via `data-pdf-new-page`). For templates without a cover letter (like Raudah and the new Katsina template), this creates an empty/sparse first page.
 
-**Database migrations:**
-- `staff_permissions` — granular per-section permissions for staff
-- `agent_wallets` / `wallet_transactions` — agent balance tracking
-- `support_tickets` — helpdesk with category/specialty routing
-- `user_activity` — audit log for all major mutations
-- `booking_amendments` — user-requested booking changes queue
-- `team_messages` — internal staff chat
-- `bank_accounts` — company bank details config
-- Expand `app_role` enum: add `super_admin`, `staff`, `support`
-- Add `visa_status`, `ticket_status`, `visa_provider`, `flight_provider`, `visa_file_url`, `ticket_file_url`, `admin_visa_message`, `admin_ticket_message` columns to `bookings`
+**Fix**: Restructure `CoverPage` to render as a **single page** when there is no `coverLetter`. The title block content should appear on page 1, directly after the letterhead.
 
-**Admin sidebar:** Add all 17 menu items (Visa Management, Flight Tickets, Agents, Bank Accounts, Activity Log, Amendments, Support Tickets, Staff Management, Team Chat, Booking Form, Settings)
+- **When `data.coverLetter` exists**: Keep the current two-page layout (letterhead + letter on page 1, title on page 2)
+- **When no `coverLetter`**: Render everything in a single `.proposal-page` div with one `data-pdf-section` — letterhead at top, then title block, client info, and date — no `data-pdf-new-page` attribute
 
-**New admin pages (scaffolded):** AdminVisaManagement, AdminFlightTickets, AdminAgents, AdminBankAccounts, AdminActivityLog, AdminAmendments, AdminSupportTickets, AdminStaffManagement, AdminTeamChat, AdminBookingForm, AdminSettings
+This ensures content starts on page 1 for simple quotation templates.
 
-### Phase 2 — Visa & Flight Ticket Management
-*Admin upload workflow + Customer/Agent visibility*
+### Files to Modify
 
-- Admin: Upload visa/ticket PDF/image per pilgrim, set status, add messages, track provider
-- Admin: Print/view uploaded documents directly
-- Customer dashboard: New "Visa & Ticket Status" section showing status badges and download links
-- Agent dashboard: Smart filterable view showing visa/ticket status across all clients
-
-### Phase 3 — Agent Wallet System
-*Wallet balance, OTP top-up, booking deduction*
-
-- `admin-topup-wallet` edge function — initiates top-up with OTP email
-- `verify-topup-otp` edge function — verifies 6-digit code, credits wallet
-- Agent booking flow: Check balance before booking, deduct on confirmation
-- Agent UI: Wallet balance card, transaction history, top-up request
-
-### Phase 4 — Staff Management & Permissions
-*RBAC for admin team*
-
-- Staff Management page: Add/remove staff, assign granular permissions
-- Permission-gated sidebar: Hide admin sections based on `staff_permissions`
-- Activity Log page: Searchable audit trail of all system mutations
-- Audit trigger functions on key tables
-
-### Phase 5 — Support, Chat & Settings
-*Internal tooling*
-
-- Support Tickets: Multi-category helpdesk with staff routing by specialty
-- Team Chat: Real-time encrypted internal messaging (Supabase Realtime)
-- Bank Accounts: CRUD for company bank details shown to users
-- Amendments: Queue for user booking change requests with approve/reject
-- Booking Form: Dynamic field configuration for registration schema
-- Settings: T&Cs, logo, maintenance mode toggles
-
-### Phase 6 — Admin Pilgrim Enhancements
-*Attribution and agent linkage*
-
-- Pilgrim list: Show registration source (Direct vs Agent) with agent name
-- Filter pilgrims by assigned agent
-- Enhanced pilgrim detail view with full agent linkage
-
----
-
-## Technical Approach
-
-- All new tables get RLS policies following existing patterns (user sees own, admin sees all)
-- Edge functions use manual JWT verification with `verify_jwt = false`
-- New pages follow existing lazy-loading pattern with `lazyWithRetry`
-- All routes added to `App.tsx` inside existing `ProtectedRoute` wrappers
-- Existing booking/payment flows remain untouched (zero-regression)
-
-## Recommended Starting Point
-
-**Phase 1** is the foundation — without the schema changes, no other phase can proceed. I recommend starting there.
-
-Given the enormous scope, would you like me to begin with Phase 1, or would you prefer to prioritize specific features (e.g., Visa Management or Agent Wallet first)?
+| File | Change |
+|------|--------|
+| `src/data/proposalTemplates.ts` | Add `katsinaTemplate` export and add to `templateList` |
+| `src/pages/Proposal.tsx` | Restructure `CoverPage` to conditionally render single-page or two-page layout based on presence of `coverLetter` |
 

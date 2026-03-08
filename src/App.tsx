@@ -38,6 +38,17 @@ const AdminAnalytics = lazyWithRetry(() => import("./pages/admin/AdminAnalytics"
 const AdminIdTags = lazyWithRetry(() => import("./pages/admin/AdminIdTags"));
 const AdminAgentApplications = lazyWithRetry(() => import("./pages/admin/AdminAgentApplications"));
 const AdminAiAssistant = lazyWithRetry(() => import("./pages/admin/AdminAiAssistant"));
+const AdminVisaManagement = lazyWithRetry(() => import("./pages/admin/AdminVisaManagement"));
+const AdminFlightTickets = lazyWithRetry(() => import("./pages/admin/AdminFlightTickets"));
+const AdminAgents = lazyWithRetry(() => import("./pages/admin/AdminAgents"));
+const AdminBankAccounts = lazyWithRetry(() => import("./pages/admin/AdminBankAccounts"));
+const AdminActivityLog = lazyWithRetry(() => import("./pages/admin/AdminActivityLog"));
+const AdminAmendments = lazyWithRetry(() => import("./pages/admin/AdminAmendments"));
+const AdminSupportTickets = lazyWithRetry(() => import("./pages/admin/AdminSupportTickets"));
+const AdminStaffManagement = lazyWithRetry(() => import("./pages/admin/AdminStaffManagement"));
+const AdminTeamChat = lazyWithRetry(() => import("./pages/admin/AdminTeamChat"));
+const AdminBookingForm = lazyWithRetry(() => import("./pages/admin/AdminBookingForm"));
+const AdminSettings = lazyWithRetry(() => import("./pages/admin/AdminSettings"));
 const AgentLayout = lazyWithRetry(() => import("./components/agent/AgentLayout"));
 const AgentOverview = lazyWithRetry(() => import("./pages/agent/AgentOverview"));
 const AgentClients = lazyWithRetry(() => import("./pages/agent/AgentClients"));
@@ -110,6 +121,17 @@ const App = () => (
                   <Route path="id-tags" element={<AdminIdTags />} />
                   <Route path="agent-applications" element={<AdminAgentApplications />} />
                   <Route path="ai-assistant" element={<AdminAiAssistant />} />
+                  <Route path="visa-management" element={<AdminVisaManagement />} />
+                  <Route path="flight-tickets" element={<AdminFlightTickets />} />
+                  <Route path="agents" element={<AdminAgents />} />
+                  <Route path="bank-accounts" element={<AdminBankAccounts />} />
+                  <Route path="activity-log" element={<AdminActivityLog />} />
+                  <Route path="amendments" element={<AdminAmendments />} />
+                  <Route path="support-tickets" element={<AdminSupportTickets />} />
+                  <Route path="staff-management" element={<AdminStaffManagement />} />
+                  <Route path="team-chat" element={<AdminTeamChat />} />
+                  <Route path="booking-form" element={<AdminBookingForm />} />
+                  <Route path="settings" element={<AdminSettings />} />
                 </Route>
                 <Route
                   path="/agent"

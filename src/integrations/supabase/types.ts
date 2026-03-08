@@ -109,6 +109,38 @@ export type Database = {
           },
         ]
       }
+      agent_wallets: {
+        Row: {
+          agent_id: string
+          balance: number
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_wallets_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: true
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           agent_code: string
@@ -151,8 +183,90 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_accounts: {
+        Row: {
+          account_name: string
+          account_number: string
+          bank_name: string
+          created_at: string
+          id: string
+          is_active: boolean
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          account_name: string
+          account_number: string
+          bank_name: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string
+          bank_name?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      booking_amendments: {
+        Row: {
+          admin_notes: string | null
+          amendment_type: string
+          booking_id: string
+          created_at: string
+          details: Json
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amendment_type: string
+          booking_id: string
+          created_at?: string
+          details: Json
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amendment_type?: string
+          booking_id?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_amendments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
+          admin_ticket_message: string | null
+          admin_visa_message: string | null
           agent_client_id: string | null
           agent_id: string | null
           created_at: string
@@ -161,6 +275,7 @@ export type Database = {
           emergency_contact_name: string | null
           emergency_contact_phone: string | null
           emergency_contact_relationship: string | null
+          flight_provider: string | null
           full_name: string
           gender: string | null
           id: string
@@ -172,10 +287,17 @@ export type Database = {
           room_preference: string | null
           special_requests: string | null
           status: Database["public"]["Enums"]["booking_status"]
+          ticket_file_url: string | null
+          ticket_status: string | null
           updated_at: string
           user_id: string
+          visa_file_url: string | null
+          visa_provider: string | null
+          visa_status: string | null
         }
         Insert: {
+          admin_ticket_message?: string | null
+          admin_visa_message?: string | null
           agent_client_id?: string | null
           agent_id?: string | null
           created_at?: string
@@ -184,6 +306,7 @@ export type Database = {
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           emergency_contact_relationship?: string | null
+          flight_provider?: string | null
           full_name: string
           gender?: string | null
           id?: string
@@ -195,10 +318,17 @@ export type Database = {
           room_preference?: string | null
           special_requests?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
+          ticket_file_url?: string | null
+          ticket_status?: string | null
           updated_at?: string
           user_id: string
+          visa_file_url?: string | null
+          visa_provider?: string | null
+          visa_status?: string | null
         }
         Update: {
+          admin_ticket_message?: string | null
+          admin_visa_message?: string | null
           agent_client_id?: string | null
           agent_id?: string | null
           created_at?: string
@@ -207,6 +337,7 @@ export type Database = {
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           emergency_contact_relationship?: string | null
+          flight_provider?: string | null
           full_name?: string
           gender?: string | null
           id?: string
@@ -218,8 +349,13 @@ export type Database = {
           room_preference?: string | null
           special_requests?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
+          ticket_file_url?: string | null
+          ticket_status?: string | null
           updated_at?: string
           user_id?: string
+          visa_file_url?: string | null
+          visa_provider?: string | null
+          visa_status?: string | null
         }
         Relationships: [
           {
@@ -566,6 +702,129 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_permissions: {
+        Row: {
+          created_at: string
+          granted_by: string | null
+          id: string
+          permission: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          permission: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          permission?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      support_tickets: {
+        Row: {
+          assigned_to: string | null
+          category: string
+          created_at: string
+          id: string
+          message: string
+          priority: string
+          resolved_at: string | null
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          message: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          message?: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      team_messages: {
+        Row: {
+          channel: string
+          content: string
+          created_at: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          channel?: string
+          content: string
+          created_at?: string
+          id?: string
+          sender_id: string
+        }
+        Update: {
+          channel?: string
+          content?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      user_activity: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip_address: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -584,6 +843,47 @@ export type Database = {
         }
         Relationships: []
       }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          reference: string | null
+          type: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          reference?: string | null
+          type: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          reference?: string | null
+          type?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "agent_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -599,7 +899,14 @@ export type Database = {
     }
     Enums: {
       agent_status: "active" | "suspended" | "pending"
-      app_role: "admin" | "moderator" | "agent" | "user"
+      app_role:
+        | "admin"
+        | "moderator"
+        | "agent"
+        | "user"
+        | "super_admin"
+        | "staff"
+        | "support"
       booking_status: "pending" | "confirmed" | "cancelled" | "completed"
       document_type:
         | "passport"
@@ -743,7 +1050,15 @@ export const Constants = {
   public: {
     Enums: {
       agent_status: ["active", "suspended", "pending"],
-      app_role: ["admin", "moderator", "agent", "user"],
+      app_role: [
+        "admin",
+        "moderator",
+        "agent",
+        "user",
+        "super_admin",
+        "staff",
+        "support",
+      ],
       booking_status: ["pending", "confirmed", "cancelled", "completed"],
       document_type: [
         "passport",
