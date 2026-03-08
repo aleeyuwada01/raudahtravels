@@ -56,6 +56,7 @@ const AgentBookForClient = lazyWithRetry(() => import("./pages/agent/AgentBookFo
 const AgentPackages = lazyWithRetry(() => import("./pages/agent/AgentPackages"));
 const AgentBookings = lazyWithRetry(() => import("./pages/agent/AgentBookings"));
 const AgentCommissions = lazyWithRetry(() => import("./pages/agent/AgentCommissions"));
+const AgentVisaTickets = lazyWithRetry(() => import("./pages/agent/AgentVisaTickets"));
 const Proposal = lazyWithRetry(() => import("./pages/Proposal"));
 const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
 
