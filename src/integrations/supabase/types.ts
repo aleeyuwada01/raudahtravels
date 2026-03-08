@@ -109,6 +109,38 @@ export type Database = {
           },
         ]
       }
+      agent_wallets: {
+        Row: {
+          agent_id: string
+          balance: number
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_wallets_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: true
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           agent_code: string
@@ -631,6 +663,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          reference: string | null
+          type: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          reference?: string | null
+          type: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          reference?: string | null
+          type?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "agent_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
