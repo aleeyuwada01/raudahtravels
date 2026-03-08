@@ -243,7 +243,7 @@ const AdminAiAssistant = () => {
               <Button
                 type="submit"
                 disabled={isLoading || !input.trim()}
-                className="gold-gradient text-secondary-foreground shadow-gold hover:shadow-gold-lg shrink-0"
+                className="shrink-0"
               >
                 <Send className="h-4 w-4" />
               </Button>
