@@ -57,6 +57,8 @@ const AgentPackages = lazyWithRetry(() => import("./pages/agent/AgentPackages"))
 const AgentBookings = lazyWithRetry(() => import("./pages/agent/AgentBookings"));
 const AgentCommissions = lazyWithRetry(() => import("./pages/agent/AgentCommissions"));
 const AgentVisaTickets = lazyWithRetry(() => import("./pages/agent/AgentVisaTickets"));
+const AgentWallet = lazyWithRetry(() => import("./pages/agent/AgentWallet"));
+const AdminWalletManagement = lazyWithRetry(() => import("./pages/admin/AdminWalletManagement"));
 const Proposal = lazyWithRetry(() => import("./pages/Proposal"));
 const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
 
