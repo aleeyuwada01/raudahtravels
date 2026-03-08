@@ -169,7 +169,7 @@ const AdminSidebar = () => {
                 to={item.url}
                 end={item.url === "/admin"}
                 className="flex items-center gap-4 px-3 py-3 rounded-xl text-[17px] text-[hsl(0,0%,25%)] hover:bg-[hsl(0,0%,90%)] transition-colors"
-                activeClassName="bg-primary/10 text-primary font-semibold"
+                activeClassName="bg-primary text-primary-foreground font-semibold"
               >
                 <item.icon className="h-[22px] w-[22px] shrink-0 text-[hsl(0,0%,45%)]" />
                 <span>{item.title}</span>
